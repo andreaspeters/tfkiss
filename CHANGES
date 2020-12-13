@@ -1,0 +1,97 @@
+
+version 1.0 
+- added support for solaris 
+  taking an old version from mark wahl from the early 90th - HM 
+
+Changes since tfkiss-1.0
+
+version 1.0.1 
+- Added support for NetBSD - BJW
+
+- Fixed socket name truncation bug due to incorrect buffersize allocation
+  in main.c - BJW
+
+- tfkiss now installs into standard unix directory structure - BJW
+
+- Added autoconf utilities to set compile time options and 
+  parameters - BJW
+
+- General cleanup of source code reducing number of compiler
+  warnings. - BJW 
+
+version 1.0.2
+- compilation failed whenever HIBAUD option was enabled, as variable 
+  TCIOSERIAL in main.c was never defined due to missing header file
+  <sys/ioctl.h> - MH
+
+- Fixed declaration conflict of fd_set in main.c - MH
+
+version 1.0.3
+- removed all references to TNT_XXXX in configure.in - BJW
+
+- removed definition of VOID in src/all.h - BJW
+
+- corrected definition for external function tfunlink() in 
+  src/tfbc and src/tfc.c which caused a segfault on Solaris - BJW
+
+- added parentheses around true value of "if" statements in 
+  src/tfb.c:474, src/main.c:1329 and src/main.c:1366  - BJW
+
+- replaced all occurences of VOID with void in src/tfv.c - BJW
+
+version 1.0.4
+- updated CHANGE, INSTALL and README files - BJW
+
+- updated doc/tfkiss.doc file - BJW
+
+- removed tfkiss_doc_dir from tfkiss.ini files - BJW
+
+version 1.0.5
+- fixed bug in l2b.c which caused disconnection of link when idle due
+  to wrong placement of parentheses - BJW
+
+version 1.1.0
+- added command line option "-x" enabling tfkiss to switch a TNC2 from 
+  terminal mode into kiss mode - HM 
+
+- added options for XPID, AXIP and FLEXNET support to autoconfig
+  utility - BJW
+
+- added AXIP support for NetBSD - BJW
+
+- updated doc/tfkiss.doc file - HM, BJW
+
+- updated CHANGE, INSTALL and README files - BJW
+
+version 1.2 
+- sending SIGUSR1 to the process, will switch tnc from
+  kiss-mode back to hostmode, if started with -x option. 
+  this will also terminate tfkiss	- HM 
+
+version 1.2.1
+- real_clean: added to Makefile.in. This will delete all files created
+  by configure; config.{log,cache,status}, Makefile - BJW
+
+- "make install" will check for a previously installed version of
+  tfkiss.ini and suspend installation of new configuration files - BJW
+
+version 1.2.2
+- Fixed HAVE_CRTSCTS option - BJW
+
+- Added O_NONBLOCK flag to open() function in main.c:kisslink_init - BJW
+
+version 1.2.3
+- Fixed Y2K bug in tfc.c - BJW
+- Fixed compiler warnings - BJW
+
+version 1.2.4
+- Fixed undefined reference when compiling with Flexnet support - MH
+
+---------------------------------------------------------------------
+Legend:
+
+  BJW - Berndt Josef Wulf, VK5ABN, wulf@ping.net.au
+  HM  - hans mayer, OE1SMC, mayer@ping.at
+  MH  - Matthias Hensler, WS1AC, matthias@wspse.de
+---------------------------------------------------------------------
+ 

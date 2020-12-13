@@ -1,0 +1,50 @@
+INSTALL	= @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ 
+INSTALL_DATA = @INSTALL_DATA@
+MKDIR = mkdir -p
+
+tfkiss_main_dir = @tfkiss_main_dir@
+tfkiss_work_dir = @tfkiss_work_dir@
+tfkiss_conf_dir = @tfkiss_conf_dir@
+tfkiss_doc_dir = @tfkiss_doc_dir@
+tfkiss_log_dir = @tfkiss_log_dir@
+tfkiss_run_dir = @tfkiss_run_dir@
+
+all:
+	$(MAKE) -C src all
+	$(MAKE) -C examples all
+	$(MAKE) -C doc all
+
+install:
+	$(MAKE) -C src install
+	$(MAKE) -C doc install
+	@if [ -f ${tfkiss_conf_dir}/tfkiss.ini ]; then \
+	  echo "***********************************************************"; \
+	  echo "*                                                         *"; \
+	  echo "*                      W A R N I N G                      *"; \
+	  echo "*                      =============                      *"; \
+	  echo "*                                                         *"; \
+	  echo "*  A previously installed version of TFKISS was dected    *"; \
+	  echo "*  on this system. The installation of the configuration  *"; \
+	  echo "*  files was suspended in order to preserve the           *"; \
+	  echo "*  old configuration.                                     *"; \
+	  echo "*                                                         *"; \
+	  echo "*  Please refer to the documentation and CHANGE logfile   *"; \
+	  echo "*  and manually adjust the configuration files where      *"; \
+	  echo "*  necessary.                                             *"; \
+	  echo "*                                                         *"; \
+	  echo "***********************************************************"; \
+	else \
+	  $(MAKE) -C examples install; \
+	fi
+
+clean:
+	$(MAKE) -C src clean
+	$(MAKE) -C examples clean
+	$(MAKE) -C doc clean
+
+real_clean: clean
+	$(MAKE) -C src real_clean
+	$(MAKE) -C examples real_clean
+	$(MAKE) -C doc real_clean
+	rm -f Makefile config.cache config.status config.log

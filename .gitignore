@@ -50,3 +50,15 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# autoconf
+config.log
+config.status
+config.guess
+config.sub
+Makefile
+configure
+
+# test directories
+tmp_log
+tmp_cfg

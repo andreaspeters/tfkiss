@@ -1,0 +1,151 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_REVISION($REVISION: 1.00)
+AC_INIT(src/main.c)
+AC_CONFIG_HEADER(src/config.h)
+
+AC_CANONICAL_SYSTEM
+
+AC_ISC_POSIX
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+
+dnl Initial Default Values
+if test ${prefix} = "NONE"; then
+	prefix=/usr/local
+fi
+
+tfkiss_main_dir=${prefix}/tfkiss
+tfkiss_work_dir=${prefix}/tfkiss
+tfkiss_conf_dir=${prefix}/tfkiss
+tfkiss_doc_dir=${prefix}/tfkiss/doc
+tfkiss_log_dir=${prefix}/tfkiss
+tfkiss_run_dir=${prefix}/tfkiss
+
+case "$target" in
+	*-*-netbsd*)
+		AC_DEFINE(HAVE_CRTSCTS)
+		cfg=examples/netbsd.cfg
+		tfkiss_main_dir=${prefix}
+		tfkiss_work_dir=/var/spool/tfkiss
+		tfkiss_conf_dir=${prefix}/share/tfkiss/conf
+		tfkiss_doc_dir=${prefix}/share/tfkiss/doc
+		tfkiss_log_dir=/var/log
+		tfkiss_run_dir=/var/run
+	;;
+
+	*-*-linux*)
+		AC_DEFINE(HAVE_CRTSCTS)
+		cfg=examples/linux.cfg
+                tfkiss_main_dir=${prefix}
+                tfkiss_work_dir=/var/spool/tfkiss
+                tfkiss_conf_dir=${prefix}/share/tfkiss/conf
+                tfkiss_doc_dir=${prefix}/share/tfkiss/doc
+                tfkiss_log_dir=/var/log
+                tfkiss_run_dir=/var/run
+	;;
+
+	*-*-solaris*)
+		LIBS="$LIBS -lnsl -lsocket"
+		cfg=examples/solaris.cfg
+		tfkiss_main_dir=${prefix}/tfkiss
+		tfkiss_work_dir=${prefix}/tfkiss/work
+		tfkiss_conf_dir=${prefix}/tfkiss
+		tfkiss_doc_dir=${prefix}/tfkiss/doc
+		tfkiss_log_dir=${prefix}/tfkiss/work
+		tfkiss_run_dir=${prefix}/tfkiss/work/bin
+	;;
+
+	*)
+		AC_MSG_ERROR("$target is currently not supported")
+	;;
+
+esac
+
+AC_SUBST_FILE(cfg)
+AC_SUBST(tfkiss_main_dir)
+AC_SUBST(tfkiss_work_dir)
+AC_SUBST(tfkiss_conf_dir)
+AC_SUBST(tfkiss_doc_dir)
+AC_SUBST(tfkiss_log_dir)
+AC_SUBST(tfkiss_run_dir)
+AC_DEFINE_UNQUOTED(DEF_INI_DIR,"$tfkiss_conf_dir")
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(errno.h fcntl.h sys/ioctl.h sys/signal sys/time.h termcap.h termio.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_FUNC_UTIME_NULL
+AC_CHECK_FUNCS(getcwd gettimeofday mkdir mktime select socket strdup strerror strstr strtoul usleep srandom index memmove)
+
+AC_EGREP_HEADER(socklen_t, sys/socket.h, AC_DEFINE(HAVE_SOCKLEN_T, 1))
+
+AC_MSG_CHECKING(whether to enable HIBAUD)
+AC_ARG_ENABLE(hibaud, [ --enable-hibaud          use hibaud-rate (>38400), only on Linux],
+[
+	if test "$enableval" = "yes"; then
+		AC_DEFINE(USE_HIBAUD)
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
+],[
+	AC_MSG_RESULT(no)
+])
+
+AC_MSG_CHECKING(whether to enable XPID)
+AC_ARG_ENABLE(xpid, [ --enable-xpid            enable PID change code support],
+[
+	if test "$enableval" = "yes"; then
+		AC_DEFINE(USE_XPID)
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
+],[
+	AC_MSG_RESULT(no)
+])
+
+AC_MSG_CHECKING(whether to enable FLEXNET support)
+AC_ARG_ENABLE(flexnet, [ --enable-flexnet         enable FLEXNET support],
+[
+	if test "$enableval" = "yes"; then
+		AC_DEFINE(USE_FLEXDEC)
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
+],[
+	AC_MSG_RESULT(no)
+])
+
+AC_MSG_CHECKING(whether to enable AXIP support)
+AC_ARG_ENABLE(axip, [ --enable-axip            enable AXIP support],
+[
+	if test "$enableval" = "yes"; then
+		AC_DEFINE(USE_AXIP)
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
+],[
+	AC_MSG_RESULT(no)
+])
+
+AC_OUTPUT(Makefile src/Makefile doc/Makefile examples/Makefile examples/tfkiss.ini)
+
+AC_MSG_RESULT("---- Check ok. Type now \"make\" to compile and then \"make install\" to install.")
+

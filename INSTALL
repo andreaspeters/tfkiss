@@ -1,0 +1,80 @@
+A quick guide to building and installing tfkiss.
+------------------------------------------------
+
+There are just a few simple steps to complete in order to build and install
+tfkiss.
+
+      1.) Unpack the tarball into a directory of your choice,
+          e.g. /usr/src/contrib. This will create a subdirectory
+          tfkiss-1.1.0 which contains the sources, docs and
+          example configurations.
+
+		tar zxvfp tfkiss-1.1.0.tar.gz
+
+      2.) Go into the tfkiss-1.1.0 directory and run the "configure" 
+          script.
+
+                cd tfkiss-1.1.0
+                ./configure
+
+          The following option may be past on to "configure"
+
+                --prefix=</installation/directory>
+
+                        default is /usr/local 
+
+
+                --enable-axip="yes"
+
+                        use this to enable AXIP support 
+                        default is AXIP disabled 
+
+                --enable-xpid="yes"
+
+                        use this to enable XPID support
+                        default is XPID disabled 
+
+                --enable-flexnet="yes"
+
+                        use this to enable FLEXNET support
+                        default is FLEXNET disabled 
+
+                --enable-hibaud="yes"       (linux only)
+
+                        enable hibaud for serial port speed => 38400
+                        default is hibaud disabled
+
+
+      3.) Compile sources using the "make" ("gmake" on some platforms)
+
+                make
+
+                        
+      4.) Install package after succesful compilation of source code
+
+                make install
+
+          NOTE: The installation of new configuration files will be 
+                suspended if a previously installed version of tfkiss 
+                is detected on the system. This is to protect the old
+                configuration from on the system from being deleted
+                accidentally. In this case, update the configuration
+                manually after consulting the documentation and
+                CHANGES file.
+
+      5.) Check and edit configuration files tfkiss.ini, tfkiss.cfg
+          using a text editor. 
+
+
+      6.) tfkiss is now ready for action!!!
+
+
+Refer to the documentation provided with this package for more detailed
+information on configuration and operation of tfkiss.
+
+
+Enjoy
+
+73 -
+cheerio Berndt
+(VK5ABN)

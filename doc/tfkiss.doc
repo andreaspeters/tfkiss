@@ -1,0 +1,373 @@
+Documentation -TFKISS- TheFirmware TNC Software Emulator
+--------------------------------------------------------
+was originally written by Mark Wahl, DL4YBG
+
+This document was last changed on 11 July 1999
+by Hans Mayer, OE1SMC and Berndt Josef Wulf, VK5ABN
+
+
+0. Introduction
+---------------
+
+
+0.1. Licenses
+-------------
+TFKISS is based on TheFirmware by NORD><LINK. Refer to the copyright.txt
+and alas.eng files included in this archive for more details on 
+licensing conditions.
+
+Most of the AXIP API was taken from AX25IP source code written by
+Mike Westerhof KA9WSB. His copyright notice is given below:
+-------------------------------------------------------------------------
+ Copyright 1991, Michael Westerhof, Sun Microsystems, Inc.
+ This software may be freely used, distributed, or modified, providing
+ this footer is not removed.
+-------------------------------------------------------------------------
+
+The PID change code was written together with Joachim, DL8HBS.
+
+The FLEXNET decoding code was written by Rene, DG0FT.
+
+The remainder of the original source code was written by Mark Wahl
+and is covered under the ALAS license.
+
+
+0.2. Description
+----------------
+TNT, a hostmode terminal program, needs a TNC with TheFirmware connected
+to a serial interface. There are some applications, where other
+Configurations are needed:
+
+	- The TNC or PR-controller software is not compatible to TheFirmware
+	  and its hostmode, but does support KISS mode
+
+	- The interface is not on a TNC, but a TCP/IP based network
+	  (intranet/internet)
+
+	- TNT together with DPBOX shall be used directly connected to a 
+	  digipeater using KISS mode (hopefully with CRC) as interface
+
+TFKISS was written to handle these applications. It is in fact a port
+of the original TheFirmware by NORD><LINK, written for TNC2-hardware.
+The low level interfaces were changed and adapted to unix-like operating
+systems with support for  Linux, NetBSD and Solaris. On the radio
+side a KISS and an AXIP interface have taken the place of the HDLC/modem
+interface. The host connection is changed to a direct console interface (for
+terminal mode) and a socket interface (for TNT).
+
+1. Configuration
+----------------
+It is possible to operate TFKISS in several combinations. The radio side
+can be a KISS interface, an AXIP interface or a combination of both.
+On the host side a simple terminal mode can be used (nice for first tests)
+or a socket interface to work together with TNT.
+
+1.1. General configuration (tfkiss.ini)
+---------------------------------------
+This file is searched in the current directory and if not found in the
+home directory of the user and in the directory defined by DEF_INI_DIR
+during the configuration process.
+
+Here is a description of parameters which can be defined in the main
+configuration file.
+
+1.1.1) General parameters
+-------------------------
+- kiss_active		Must be set to 1, if KISS interface shall be used,
+			otherwise set to 0.
+
+- axip_active		Must be set to 1, if AXIP interface shall be used,
+			otherwise set to 0.
+
+- tfkiss_conf_dir	Directory path where all tfkiss configuration
+                        files are stored
+
+- tfkiss_log_dir	Directory path where all tfkiss log files are 
+                        stored
+
+- tfkiss_run_dir	Directory path where tfkiss status files are
+                        stored
+
+- tfkiss_procfile	Name of file containing the process id of the running
+			TFKISS process (for use with BOXSTART).
+
+- tfkiss_errfile	Name for logfile to which logging data, warning and
+			error messages will be saved.
+
+- tfkiss_parafile	Name of file where TFKISS will store internal para-
+			meters (callsign, txdelay, e.t.c.) at termination.
+
+Only one of the following values is allowed:
+
+- tfkiss_socket		Defines name of socket which is used as an interface
+			to TNT. The socket is defined by a valid pathname.
+			If the name does not start with a '/', 'tfkiss_dir'
+			is added at the beginning.
+
+- tfkiss_extsocket	Defines name of socket which is used as an interface
+			to TNT. The socket can be an UNIX- or an IP-Socket.
+			Unix-sockets are defined by 'unix:<pathname>',
+			IP-Sockets by <IP-address/name>:<portnumber>.
+			Valid examples are:
+				unix:tfkiss
+				unix:/usr/local/dptnt/tfkiss/tfkiss
+				*:5000
+				localhost:5002
+				bla.blub.org:6000
+
+If both tfkiss_socket and tfkiss_extsocket are left blank, TFKISS will start
+in terminal mode on the console.
+
+1.1.2) Parameters for KISS interface
+------------------------------------
+- device		Device used for a KISS interface, a serial device or
+			any other tty-device.
+- tfkiss_lockfile	Lockfile to lock the KISS device against other
+                        programs.
+- speed			Baudrate used on KISS device
+- fulldup_on_dama	Set to 1 for better DAMA performance, allows a quick
+			answer on the poll of the DAMA master independent of
+			DCD.
+- kisstype		Type of KISS which shall be used on KISS device:
+			0: normal KISS without CRC
+			   WARNING: This is HIGHLY insecure! You may lose
+			   characters on the serial line WITHOUT knowing it.
+			   Use this only for testing purposes!
+			1: SMACK, KISS with CRC16, developed by
+			   Jan Schiefer, DL5UE
+			2: RMNC-KISS, KISS with CRC as implemented in
+			   FLEXNET digipeater software
+			Note: There is NO autoprobing of the protocol
+			of the connected KISS device. You have to select
+			the correct mode manually!
+
+c) Parameters for AXIP interface
+- tfkiss_axipconfig	Name of file which will contain all parameters
+			concerning AXIP configuration.
+
+
+Sample tfkiss.ini file:
+-----------------------
+# directory for config files
+tfkiss_conf_dir /usr/local/share/tfkiss/conf
+
+# directory for log files
+tfkiss_log_dir /var/log
+
+# directory for status files
+tfkiss_run_dir /var/run
+ 
+# file containing process id
+tfkiss_procfile tfkiss.pid
+
+# log file for errors
+tfkiss_errfile tfkiss.err
+
+# save file for parameters
+tfkiss_parafile tfkiss.par
+
+# UNIX-socket for connection to TNT
+tfkiss_socket tfkiss_socket
+
+# config-file for axip port
+tfkiss_axipconfig tfkiss.cfg
+
+# device for kiss port
+device /dev/cua0
+
+# lockfile for device used for kiss port
+tfkiss_lockfile /usr/spool/uucp/LCK..cua0
+
+# speed on device for kiss port
+speed 19200
+
+# switch kiss-tnc to fullduplex if DAMA detected
+fulldup_on_dama 1
+
+# IP-socket for connection to TNT
+#tfkiss_extsocket *:5000
+
+# type of KISS on kiss port: 0: KISS, 1: SMACK, 2: RMNC-KISS
+kisstype 1
+
+# enable (1) or disable (0) kiss port
+kiss_active 1
+
+# enable (1) or disable (0) axip port
+axip_active 0
+<EOF>
+
+1.2. AXIP configuration (tfkiss.cfg)
+------------------------------------
+All AXIP configuration is defined in this file, which layout is similar
+to that of the original AX25IP program:
+
+- socket		Give mode of operation, several entries are
+			possible.
+			ip: AXIP according to RFC1226
+			udp: transport of AX25 data via an udp connection,
+			     if no port is given, 10093 is used as a
+			     default.
+
+- mode			Defines the mode of operation of the AXIP part
+			of TFKISS.
+			tnc: data is given transparently to/from network
+			digi: data is digipeated using call defined as
+			      mycall
+
+- mycall		Digipeater callsign, only needed if mode digi is
+			used.
+
+- loglevel		Logging function for debugging purposes, logging
+			data will be put to file defined by tfkiss_errfile.
+
+- route			Defines routing data, gives network destination
+			and transport type for AX25 callsigns.
+			syntax: route <callsign> <hostname> [udp] [udp-port]
+			For default route <callsign> is substituted by
+			'default'. 
+			Note: If default route is defined, no data will use
+			an available KISS interface!
+
+sample tfkiss.cfg file:
+# Sample tfkiss/ax25ip configuration file
+#
+# First select active socket types
+# syntax: socket <ip/udp> [udp-port]
+#
+socket ip
+socket udp
+#
+# Select the mode of operation. (digi or tnc)
+#
+mode tnc
+#
+# If you selected digi, you must define a callsign.  If you selected
+# tnc mode, the callsign is optional
+#
+mycall nocall
+#
+# loglevel 0 - no output
+# loglevel 1 - config info only
+# loglevel 2 - major events and errors
+# loglevel 3 - major events, errors, and AX25 frame trace
+# loglevel 4 - all events
+#
+loglevel 0
+#
+# Define some routes.  One example routes all traffic for callsign db0zzz
+# to a host named nexthost.bla.blub.  You can define as many as
+# required.
+# syntax: route <callsign> <hostname> [udp] [udp-port]
+#
+route db0zzz nexthost.bla.blub
+route db0zzy-5 otherhost.bla.blub udp
+route db0zzx-2 localhost udp 10094
+#
+# A catch-all is provided: this line sends all calls not specifically
+# noted in the routing tables to otherhost.bla.blub.  Use this feature
+# with great care -- the host on the other end may not appreciate all the
+# traffic!
+# syntax: route default <hostname> [udp] [udp-port]
+#
+#route default otherhost.bla.blub
+#
+<EOF>
+
+
+2. Startup options
+------------------
+There are several options at startup of tfkiss that change the behaviour
+of the program.
+
+Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-u] [-r] [-t]
+
+   -i	Defines an alternative init-file instead of the default tfkiss.ini.
+	This may be very useful when testing new system configurations.
+
+   -s	Defines an alternative socket for the TNT interface, even if 
+	tfkiss_socket is not defined.
+
+   -u	Ignores an existing lockfile for the KISS device.
+
+   -r	Ignore and delete all system parameter stored in tfkiss_para file.
+
+   -t	Ingore the tfkiss_socket definition in tfkiss.ini and start
+	tfkiss on the console instead of the socket for TNT.
+
+   -x   This option switches a TNC2 from terminal-mode to kiss-mode.
+        It may be of particular interest to those operating TNC2 modems
+	with the "TheFirm" firmware, which will boot into terminal
+	terminal after powerup.
+
+3. Finish TFKISS
+----------------
+There are 3 ways to exit TFKISS:
+
+	- By issuing the QRES command in terminal mode, which in
+          contrast to the original TNC-software terminates the program
+          and saves the tfkiss system parameter into the tfkiss_para
+          file.
+
+	- By sending a SIGTERM signal ( 15 ) to the process when using the
+          socket interface to TNT ('kill <tfkiss-process-ID>')
+
+	- sending a SIGUSR1 signal ( 16 ) 
+	  this will switch back a tnc with thefirm from kiss 
+	  to a higher protocol, if started with -x option.
+
+
+4. Extensions to TheFirmware
+----------------------------
+
+4.1. Parameter for txtail-length
+--------------------------------
+In KISS mode a value for the time between the last character put in the
+HDLC controller and the switch off of the transmitter can be given.
+This time is called 'txtail'. 
+It can be handled by the new extended TNC command '@TA'. The metric of
+the value is 10ms, 4 means a txtail of 40ms.
+ 
+4.2. Parameter for changing PID
+-------------------------------
+For special applications, like broadcast or TCP/IP different PID values
+are needed. The PID can be changed using the new extended TNC command '@P'.
+The argument for this command is the PID value in decimal. The PID will
+be changed only on the currently selected channel.
+
+4.3. Information about a changed PID
+------------------------------------
+If the remote station use a different PID than the default one 240 (0f0h),
+a link status message will inform about this:
+   'PID changed to (EF)'
+
+4.4. Decoding of frames in internal FLEXNET protocol
+----------------------------------------------------
+FLEXNET digipeaters use a special format for communication. Only one address
+field (7 Bytes) is used to define source and destination of the data.
+This specially encoded address field is displayed in readable form.
+
+
+5. Contact
+----------
+Refer to the list below if you wish to get in contact with the current
+maintainers of tfkiss:
+
+Mailing List: tnt-devel@excelsior.kullen.rwth-aachen.de
+   Subscribe by sending an E-Mail to majordomo@excelsior.kullen.rwth-aachen.de
+   with "subscribe devel-tnt" in the main body of the message.
+
+Hans Mayer (OE1SMC)
+HAM-Radio: oe1smc@oe1xab.#oe1.aut.eu
+E-Mail:    mayer@ping.at
+URL:       http://www.bfl.at/mayer/ham
+
+Matthias Hensler
+E-Mail:    wsp@gmx.de
+URL:       http://excelsior.kullen.rwth-aachen.de
+
+Berndt Josef Wulf (VK5ABN)
+HAM-Radio: vk5abn@vk5abn.#LMR.#SA.AUS.OC
+E-Mail:    wulf@ping.net.au
+
+73 - Berndt (VK5ABN)

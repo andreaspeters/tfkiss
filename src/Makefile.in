@@ -1,0 +1,92 @@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+MKDIR = mkdir -p
+
+tfkiss_main_dir = @tfkiss_main_dir@
+tfkiss_work_dir = @tfkiss_work_dir@
+tfkiss_conf_dir = @tfkiss_conf_dir@
+tfkiss_doc_dir = @tfkiss_doc_dir@
+tfkiss_log_dir = @tfkiss_log_dir@
+tfkiss_run_dir = @tfkiss_run_dir@
+
+CC              = @CC@
+CPP             = $(CC) -E
+DEFS            = @DEFS@
+CFLAGS          = $(DEFS) -funsigned-char
+LD              = $(CC)
+LDFLAGS         = @LDFLAGS@
+LIBS            = @LIBS@
+
+HDRS		= all.h \
+		  l2.h \
+                  l2ext.h \
+                  l2s.h \
+                  tf.h \
+                  tfext.h \
+                  version.h \
+		  kiss.h \
+		  init.h \
+		  config.h \
+		  axip.h
+
+OBJS		= l2a.o \
+		  l2b.o \
+		  l2c.o \
+                  l2d.o \
+		  l2e.o \
+                  l2s.o \
+                  l2v.o \
+                  tfa.o \
+                  tfb.o \
+                  tfc.o \
+                  tfd.o \
+                  tfv.o \
+		  crc.o \
+		  init.o \
+		  main.o \
+		  process.o \
+		  routing.o
+
+SRCS		= l2a.c \
+		  l2b.c \
+                  l2c.c \
+                  l2d.c \
+		  l2e.c \
+                  l2s.c \
+                  l2v.c \
+                  tfa.c \
+                  tfb.c \
+                  tfc.c \
+                  tfd.c \
+                  tfv.c \
+		  crc.c \
+		  init.c \
+		  main.c \
+		  process.c \
+		  routing.c
+
+all:		tfkiss
+
+tfkiss:		$(OBJS)
+		$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LDFLAGS) -o tfkiss;
+
+install:
+		$(MKDIR) ${tfkiss_main_dir}/sbin; \
+		$(INSTALL_PROGRAM) tfkiss ${tfkiss_main_dir}/sbin;
+
+clean:
+	rm -f   *.o *.core tfkiss .depend
+
+real_clean: clean
+	rm -f *.orig *.bak *~ .*~ Makefile
+
+dep:
+	$(CPP) -M $(SRCS) $(CFLAGS) > .depend
+
+#
+# include a dependency file if one exists
+#
+ifeq (.depend,$(wildcard .depend))
+include .depend
+endif

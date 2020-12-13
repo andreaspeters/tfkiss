@@ -1,0 +1,39 @@
+TheFirmware Copyright by NORD><LINK   (c)1992-94
+------------------------------------------------
+
+Aus gegebenen Anlass weisen wir darauf hin, daá die
+mitgelieferten TheFirmware Quelldateien und Objektfiles
+ausschliesslich zum privaten Gebrauch von Funkamateuren
+kostenlos genutzt werden drfen.
+Eine kommerzielle Nutzung der vertrauensvoll berlassenen
+Dateien, auch nur in Auszgen, ist strengstens untersagt!
+Bei Zuwiderhandlung ist mit rechtlichen Schritten zu rechnen.
+Ferner ist es nicht erlaubt den NORD><LINK Copyright Vermerk,
+weder im Source noch in der Einschaltmeldung der compilierten
+Version, zu entfernen.
+Ge„nderte Versionen drfen als solche mit einem Zusatzvermerk
+gekennzeichnet werden. Die Verbreitung von ge„nderten Versionen
+ist jedoch nur mit dem vorherigen Einverst„ndnis von NORD><LINK
+gestattet. Ausserdem bleibt der Source- und Objektcode dieser
+Versionen Copyright by NORD><LINK, d.h. er muss unter den
+oben genannten Bedingungen frei verfgbar sein.
+
+Es gelten die Bedingungen einer Lizenz, die mit jeder Kopie
+der Software verteilt wird (siehe ALAS.TXT).
+
+Um es ganz klar zu sagen: damit unterliegt die Software dann dem Schutz
+des Urheberrechtes. Bei Verstoessen kann dann entsprechend vorgegangen
+werden. Eigentlich ist es schade, dass einige schwarze Schafe uns zu so
+etwas zwingen.
+
+Bei weiteren Fragen:
+
+NORD><LINK e.V.
+
+Hans-Georg Giese           Peter Glzow
+Hinter dem Berge 5         Allensteiner Str. 5
+3300 Braunschweig          3014 Laatzen 3
+
+
+73, Georg,    DF2AU @DK0MAV
+    Peter,    DB2OS @DB0FAU

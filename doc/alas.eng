@@ -1,0 +1,74 @@
+           General Licence for Amateur Radio Software (ALAS)
+
+             This is the only official translation from
+          "Allgemeine Lizenz fr Amateurfunk Software (ALAS)"
+
+Copyright (C) 1993   NORD><LINK e.V.
+                     Hinter dem Berge 5
+                     D-3300 Braunschweig
+
+
+This document may be copied and distributed freely as long as it is not
+modified. Any suggestions how to improve it are appreciated.
+(DF2AU @ DK0MAV.DL.EU)
+
+
+1. Preface
+This licence was made from the General Public Licence (Free Software
+Foundation, GPL). I tried to keep the intentions and clarify some things.
+Some topics have been deleted.
+
+The reason for this licence is to protect both the author and the user
+of amateur radio software. So some restrictions were necessary and also
+some duties are put on anyone modifying or distributing software under
+this licence.
+
+To achieve this the software is protected by Copyright (IT IS NOT PUBLIC
+DOMAIN SOFTWARE) and the user gets almost any chance to use it.
+
+
+2. Scope
+This licence applies to any Program or part of a package that refers to
+this licence either in a signon message or in a file on the distribution disk.
+"Program" is the program or any part of it, "You" are the licensee.
+
+
+3. Your rights:
+You may use or copy or modify or distribute the program as long as you
+do it for non commercial reasons only.
+
+
+4. Your duties:
+4.1. You may not change the copyright notice and the reference to this
+licence and they shall be clearly visible when starting the program.
+
+4.2. You shall give anybody who receives a copy of this program the same
+rights as you got and you shall impose the same duties on him.
+
+4.3. You shall not ask for any money exceeding the actual costs for the
+media and postage when making copies.
+
+4.4. You shall only copy the complete program as you received it.
+
+4.5. If you modify the program or parts of it or use it for your own
+programs - verbatim or modified - the following shall apply for the
+resulting new program:
+
+4.5.1. You shall clearly indicate:
+ - your name and address and
+ - the fact that you modified the program or used parts of it.
+
+4.5.2. You shall distribute the program either with the complete sourcecode
+or shall give anybody on demand a copy of the sourcecode for a fee not
+exceeding the actual costs for media and postage.
+
+4.5.3. You shall not make any restrictions which exceed this licence.
+
+5. Additional remarks
+You receive this program without any warranty for functionality or fitness
+for a particular purpose. You waive any claims for any reason.
+By using the program you acknowledge this licence unconditionally.
+
+
+Vers. 1.0, 28-FEB-93
+

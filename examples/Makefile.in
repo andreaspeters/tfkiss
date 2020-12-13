@@ -1,0 +1,28 @@
+INSTALL	= @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ 
+INSTALL_DATA = @INSTALL_DATA@
+MKDIR = mkdir -p
+
+tfkiss_main_dir = @tfkiss_main_dir@
+tfkiss_work_dir = @tfkiss_work_dir@
+tfkiss_conf_dir = @tfkiss_conf_dir@
+tfkiss_doc_dir = @tfkiss_doc_dir@
+tfkiss_log_dir = @tfkiss_log_dir@
+tfkiss_run_dir = @tfkiss_run_dir@
+
+CFGS = tfkiss.ini tfkiss.cfg
+
+all:
+
+install:
+	$(MKDIR) ${tfkiss_conf_dir}
+	@for i in $(CFGS); \
+	do \
+		$(INSTALL_DATA) $$i ${tfkiss_conf_dir}; \
+	done;
+
+clean:
+	rm -f *.orig *.o *~ .*~ 
+
+real_clean: clean
+	rm -f *.orig *.bak *~ .*~ tfkiss.ini Makefile
