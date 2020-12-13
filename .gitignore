@@ -58,6 +58,10 @@ config.guess
 config.sub
 Makefile
 configure
+autom4te.cache
+
+# executables
+src/tfkiss
 
 # test directories
 tmp_log

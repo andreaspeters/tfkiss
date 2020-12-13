@@ -1,3 +1,14 @@
+This is a modified version of tfkiss-1.2.4 that will build and
+run on 64-bit systems. The original tfkiss versions has some issues with
+sizes of datatypes (like pointers) that are differend on 64-bit systems,
+causing SEGVs at runtime.
+
+For building information, please check the file README.hb9xar
+
+The original README content follows below.
+
+----------------------
+
 This is the release of tfkiss-1.1.0, a port of TheFirmware by
 by NORD><LINK written for TNC2 hardware. Refer to the copyrght.txt and
 alas.* files in the doc directory for more detailed information on

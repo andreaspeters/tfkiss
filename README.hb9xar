@@ -1,0 +1,15 @@
+
+
+
+bootstrap:
+$ ./autogen.sh
+$ ./configure
+
+build:
+$ make clean && make
+
+
+History
+-------
+2020-12-13 hb9xar	- imported tfkiss-1.2.4
+			- applied various sizing fixes for 64bit
