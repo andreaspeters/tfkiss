@@ -8,8 +8,12 @@ $ ./configure
 build:
 $ make clean && make
 
+debug build:
+$ CFLAGS='-ggdb' ./configure 
+$ make clean && make
+
 
 History
 -------
 2020-12-13 hb9xar	- imported tfkiss-1.2.4
-			- applied various sizing fixes for 64bit
+			- configure: pass along Env CFLAGS into Makefile
