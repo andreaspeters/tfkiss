@@ -45,7 +45,7 @@
 #define socklen_t int
 #endif
 
-#define unsigned unsigned short
+//&&&#define unsigned unsigned short
 
 
 /*                                                         Festlegungen   */
@@ -88,7 +88,7 @@
 /*                                                       einfache Typen   */
 /**************************************************************************/
 
-typedef unsigned   BOOLEAN;   /* 1 = TRUE, 0 = FALSE                      */
+typedef unsigned short  BOOLEAN;   /* 1 = TRUE, 0 = FALSE                 */
 
 
 

@@ -59,7 +59,8 @@
 #include "kiss.h"
 #include "version.h"
 
-#undef unsigned
+//&&& hb9xar
+//&&&#undef unsigned
 
 #ifdef USE_AXIP
 #include <sys/socket.h>
@@ -1174,7 +1175,6 @@ int main(int argc,char *argv[])
   struct iphdr *ipptr; 
 #endif
 #endif
-
   umask(0); /* don't filter file-permissions */
 
   buffers = (char *)malloc(BUFFERSIZE);
@@ -1376,7 +1376,10 @@ int main(int argc,char *argv[])
       }
     }
 
-    timevalue.tv_usec = 10000;
+/*&&&hb9xar: 10ms cycle gibt eine relativ hohe CPU Last. 
+             Daher auf 100ms erhöht.
+    timevalue.tv_usec = 10000; */
+    timevalue.tv_usec = 100000;
     timevalue.tv_sec = 0;
     count = select(max_fd,&rmask,(fd_set *) 0,
                    (fd_set *) 0,&timevalue);

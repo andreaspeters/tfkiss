@@ -55,7 +55,7 @@ extern BOOLEAN     digipt();                      /* L2...                */
 extern BOOLEAN     srxdNR();
 extern BOOLEAN     isnxti();
 extern BOOLEAN     splcpy();
-extern unsigned    setNR();
+extern unsigned short    setNR();
 
 extern MBHEAD     *cpyfb();
 extern BOOLEAN     takfhd();
@@ -69,7 +69,7 @@ extern BOOLEAN     cmpcal();
 extern BOOLEAN     cmpidl();
 extern BOOLEAN     cmpid();
 extern BOOLEAN     l1put();
-extern unsigned    l1get();
+extern unsigned short    l1get();
 extern LEHEAD     *allocb();
 extern LEHEAD     *unlink();
 extern LEHEAD     *relink();
@@ -81,7 +81,7 @@ extern BOOLEAN     fmlink();                      /* L3... / TF...        */
 
 
 
-extern unsigned    nbrprt();                      /* L7... / TF...        */
+extern unsigned short    nbrprt();                      /* L7... / TF...        */
 extern BOOLEAN     iswarm();
 
 
@@ -104,7 +104,7 @@ extern char        rxfhdr[];
 extern char        rxfctl;
 extern char        rxfPF;
 extern char        rxfV2;
-extern unsigned    damati;
+extern unsigned short    damati;
 extern char        rxfCR;
 extern char        rxfprt;
 #ifdef USE_FLEXDEC
@@ -119,16 +119,16 @@ extern char        txfprt;
 extern char        Wpar;
 extern char        Ppar;
 extern char        UIpar;
-extern unsigned    Opar;
-extern unsigned    Npar;
-extern unsigned    T2par;
-extern unsigned    T3par;
-extern unsigned    Rpar;
-extern unsigned    T3par;
-extern unsigned    Fpar;
-extern unsigned    Ipar;
-extern unsigned    A3par;
-extern unsigned    nmbfre;
+extern unsigned short    Opar;
+extern unsigned short    Npar;
+extern unsigned short    T2par;
+extern unsigned short    T3par;
+extern unsigned short    Rpar;
+extern unsigned short    T3par;
+extern unsigned short    Fpar;
+extern unsigned short    Ipar;
+extern unsigned short    A3par;
+extern unsigned short    nmbfre;
 extern LHEAD       freel;
 extern LHEAD       rxfl;
 extern LHEAD       stfl;
@@ -139,10 +139,10 @@ extern MBHEAD     *txfhd[];
 extern LNKBLK      lnktbl[];
 extern LNKBLK     *lnkpoi;
 
-extern unsigned    conctl;
+extern unsigned short    conctl;
 
 
-extern unsigned    VCpar;                         /* L7... / TF...        */
+extern unsigned short    VCpar;                         /* L7... / TF...        */
 
 extern LHEAD       monfl;
 

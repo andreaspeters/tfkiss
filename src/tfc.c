@@ -103,7 +103,7 @@ void stampb();
 
 void inilks()
   {
-    unsigned    n;
+    unsigned short    n;
     LNKBLK     *savelp;
 
     savelp = lnkpoi;
@@ -124,7 +124,7 @@ void inilks()
 
 void rspic(c)
 
-unsigned c;
+unsigned short c;
 
   {
     rspini(HMRFMSG);
@@ -145,7 +145,7 @@ unsigned c;
 
 void rspiec(c)
 
-unsigned c;
+unsigned short c;
 
   {
     rspini(HMRFMSG);
@@ -166,7 +166,7 @@ unsigned c;
 
 void rspiv(value)
 
-unsigned value;
+unsigned short value;
 
   {
     rspini(HMRFMSG);
@@ -291,9 +291,9 @@ void frhmon(fbp)
 MBHEAD *fbp;
 
   {
-    static unsigned    pid;
+    static unsigned short    pid;
 #ifdef USE_FLEXDEC
-    unsigned           qso;
+    unsigned short           qso;
 #endif
 
 
@@ -430,7 +430,7 @@ MBHEAD *mbp;
 void hputmb(mbp)
 MBHEAD *mbp;
 {
-  static unsigned    ch;
+  static unsigned short    ch;
 
   while (mbp->mbgc < mbp->mbpc)
   {
@@ -482,7 +482,7 @@ void rspcs()
 
 void hputv(dmark,vial)
 
-unsigned    dmark;
+unsigned short    dmark;
 char       *vial;
 
   {
@@ -505,7 +505,7 @@ char       *vial;
 
 void hputvl(dmark,vial)
 
-unsigned    dmark;
+unsigned short    dmark;
 char       *vial;
 
   {
@@ -539,9 +539,9 @@ void hputid(id)
 char *id;
 
   {
-    static unsigned ssid;
-    static unsigned n;
-    static unsigned ch;
+    static unsigned short ssid;
+    static unsigned short n;
+    static unsigned short ch;
 
     for (n = 0; n < L2CALEN; ++n)
       if ((ch = *id++ & 0xFF) > ' ')
@@ -571,7 +571,7 @@ char *id;
 
 void rsppar(par)
 
-unsigned par;
+unsigned short par;
 
   {
     rspini(HMRSMSG);
@@ -591,13 +591,13 @@ unsigned par;
 
 void hputud(u)
 
-unsigned u;
+unsigned short u;
 
   {
     static BOOLEAN    out;
-    static unsigned   div;
-    static unsigned   digit;
-    static unsigned   n;
+    static unsigned short   div;
+    static unsigned short   digit;
+    static unsigned short   n;
 
     for (out = FALSE, div = 10000, n = 0; n < 5; ++n)
       {
@@ -674,7 +674,7 @@ TIMEBL *tbp;
 
 void hputby(byte)
 
-unsigned byte;
+unsigned short byte;
 
   {
     hputni(byte >> 4);
@@ -693,7 +693,7 @@ unsigned byte;
 
 void hputni(nibble)
 
-unsigned nibble;
+unsigned short nibble;
 
   {
     nibble &= 0xF;
@@ -713,7 +713,7 @@ unsigned nibble;
 
 void rspini(r)
 
-unsigned r;
+unsigned short r;
 
   {
     if (!ishmod)
@@ -749,7 +749,7 @@ void rspsuc()
 
 void hmputr(r)
 
-unsigned r;
+unsigned short r;
 
   {
     hputc(actch);
@@ -837,7 +837,7 @@ char *str;
 
 void hputcc(c)
 
-unsigned c;
+unsigned short c;
 
   {
     if (c >= ' ')
@@ -861,7 +861,7 @@ unsigned c;
 
 void sttoch(msg)
 
-unsigned msg;
+unsigned short msg;
 
   {
     static char     *frmrp;
@@ -917,7 +917,7 @@ unsigned msg;
 
 void putv(dmark,vial,mbp)
 
-unsigned    dmark;
+unsigned short    dmark;
 char       *vial;
 MBHEAD     *mbp;
 
@@ -957,9 +957,9 @@ char     *id;
 MBHEAD   *mbp;
 
   {
-    static unsigned ssid;
-    static unsigned n;
-    static unsigned c;
+    static unsigned short ssid;
+    static unsigned short n;
+    static unsigned short c;
 
     for (n = 0; n < L2CALEN; ++n)
       if ((c = *id++ & 0xFF) > ' ')
@@ -989,14 +989,14 @@ MBHEAD   *mbp;
 
 void putudc(u,mbp)
 
-unsigned    u;
+unsigned short    u;
 MBHEAD     *mbp;
 
   {
     static BOOLEAN    out;
-    static unsigned   div;
-    static unsigned   digit;
-    static unsigned   n;
+    static unsigned short   div;
+    static unsigned short   digit;
+    static unsigned short   n;
 
     for (out = FALSE, div = 10000, n = 0; n < 5; ++n)
       {
@@ -1022,7 +1022,7 @@ MBHEAD     *mbp;
 
 void putbyt(byte,mbp)
 
-unsigned    byte;
+unsigned short    byte;
 MBHEAD     *mbp;
 
   {
@@ -1042,7 +1042,7 @@ MBHEAD     *mbp;
 
 void putnib(nibble,mbp)
 
-unsigned    nibble;
+unsigned short    nibble;
 MBHEAD     *mbp;
 
   {
@@ -1080,9 +1080,9 @@ MBHEAD   *mbp;
 *                                                                          *
 \**************************************************************************/
 
-unsigned bgetp()
+unsigned short bgetp()
   {
-    static unsigned par;
+    static unsigned short par;
 
     nxtnos();
     par = 0;
@@ -1107,15 +1107,15 @@ unsigned bgetp()
 
 short fvalca(check,call)
 
-unsigned    check;
+unsigned short    check;
 char       *call;
 
   {
     char       *lnpoi;
     char       *cpoi;
-    unsigned    nmbn;
-    unsigned    n;
-    unsigned    c;
+    unsigned short    nmbn;
+    unsigned short    n;
+    unsigned short    c;
 
     if (*call == ' ') return(FALSE);
     if (!check) return(TRUE);
@@ -1158,7 +1158,7 @@ void stampb(dtp)
 char *dtp;
 
   {
-    static unsigned   n;
+    static unsigned short   n;
     static char      *stp;
 
     for (stp = (char *)&tftime, n = 0; n < 6; ++n) *dtp++ = *stp++;
@@ -1249,13 +1249,13 @@ MBHEAD *fbp;
 *                                                                          *
 \**************************************************************************/
 
-unsigned mbcnt(msgl,select)
+unsigned short mbcnt(msgl,select)
 
 LHEAD      *msgl;
-unsigned    select;
+unsigned short    select;
 
   {
-    static unsigned    count;
+    static unsigned short    count;
     static MBHEAD     *mb;
 
     for (count = 0, mb = (MBHEAD *)msgl->head; mb != (MBHEAD *)msgl; 
@@ -1280,7 +1280,7 @@ unsigned    select;
 MBHEAD *selmb(msgl,select)
 
 LHEAD      *msgl;
-unsigned    select;
+unsigned short    select;
 
   {
     static MBHEAD *mb;
@@ -1348,7 +1348,7 @@ BOOLEAN nxtnos()
 *                                                                          *
 \**************************************************************************/
 
-unsigned nbrprt(id)
+unsigned short nbrprt(id)
 
 char *id;
 

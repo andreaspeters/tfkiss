@@ -101,7 +101,7 @@
 #define HAVE_SYS_TIME_H 1
 
 /* Define if you have the <termcap.h> header file.  */
-/* #undef HAVE_TERMCAP_H */
+#define HAVE_TERMCAP_H 1
 
 /* Define if you have the <termio.h> header file.  */
 #define HAVE_TERMIO_H 1
@@ -116,13 +116,13 @@
 #define HAVE_CRTSCTS 1
 
 /* define USE_HIBAUD for baudrates above 38400 baud (Linux only) */
-/* #undef USE_HIBAUD */
+#define USE_HIBAUD 1
 
 /* define USE_AXIP for ax25 encapsulation in ip packets */
-/* #undef USE_AXIP */
+#define USE_AXIP 1
 
 /* define USE_XPID if pid is changeable */
-/* #undef USE_XPID */
+#define USE_XPID 1
 
 /* define USE_FLEXDEC for support of decoded flexnet node frames */
 /* #undef USE_FLEXDEC */

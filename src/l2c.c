@@ -323,7 +323,7 @@ void stxfad()
 *                                                                          *
 \**************************************************************************/
 
-unsigned setNR(control)
+unsigned short setNR(control)
 
 char control;
 
@@ -354,7 +354,7 @@ void sdl2fr(fbp)
 MBHEAD *fbp;
 
   {
-    static unsigned port;               /* Portnummer                     */
+    static unsigned short port;               /* Portnummer                     */
 
     port = fbp->l2port;                 /* Portnummer holen               */
     if (nmbfre > TXBREMSE)              /* noch genug Buffer ?            */
@@ -399,7 +399,7 @@ MBHEAD *fbp;
 
   {
     static char       *savmbbp;         /* mbbp-Sicherung                 */
-    static unsigned    savmbgc;         /* mbgc-Sicherung                 */
+    static unsigned short    savmbgc;         /* mbgc-Sicherung                 */
     static MBHEAD     *newfbp;          /* Zeiger auf die Kopie           */
 
     savmbbp = fbp->mbbp;                /* mbbp sichern                   */
@@ -553,7 +553,7 @@ MBHEAD *fbp;
 
   {
     static char       flx[7], *hdr;
-    static unsigned   qso, div, digit, n;
+    static unsigned short   qso, div, digit, n;
     static BOOLEAN    out;
 
     rwndmb(fbp);                                   /* Frame von vorne     */
@@ -570,7 +570,7 @@ MBHEAD *fbp;
     *hdr++ = 0x20 + (((flx[5] << 4) & 0x30) | ((flx[6] >> 4) & 0x0F));
     *hdr++ = 0x60 | ((flx[6] << 1) & 0x1E);        /* SSID (ohne C/R-Bit) */
 
-    qso = (unsigned) (((flx[0] << 6) & 0x3FC0) | ((flx[1] >> 2) & 0x3F));
+    qso = (unsigned short) (((flx[0] << 6) & 0x3FC0) | ((flx[1] >> 2) & 0x3F));
                                                    /* ermittle QSO-Nummer */
 
     *hdr++ = '#';                                  /* Prefix fuer Nummer  */
@@ -620,7 +620,7 @@ MBHEAD   *mbhd;
 
   {
     static char       c;                /* aktuelles Zeichen aus Buffer   */
-    static unsigned   n;                /* Zaehler Call-Laenge            */
+    static unsigned short   n;                /* Zaehler Call-Laenge            */
 
     if (mbhd->mbpc - mbhd->mbgc < L2IDLEN)        /* im Buffer nicht mehr */
       return (FALSE);                             /* genug Bytes fuer ID  */
@@ -652,7 +652,7 @@ MBHEAD   *mbhd;
 
 MBHEAD *makfhd(fflag)
 
-unsigned fflag;
+unsigned short fflag;
 
   {
     static MBHEAD *fbp;                           /* Zeiger auf Kopf      */
@@ -722,7 +722,7 @@ char     *id;
 MBHEAD   *mbhd;
 
   {
-    static unsigned n;                  /* Zaehler Call-Laenge            */
+    static unsigned short n;                  /* Zaehler Call-Laenge            */
 
     for (n = 0; n < L2CALEN; ++n)       /* Call uebertragen in Buffer,    */
       putchr(*id++ << 1,mbhd);          /* 1 Bit linksgeschoben           */
@@ -780,7 +780,7 @@ char *call1;
 char *call2;
 
   {
-    static unsigned n;                                 /* Zaehler         */
+    static unsigned short n;                                 /* Zaehler         */
 
     for (n = 0; n < L2CALEN; ++n)                      /* jedes Zeichen   */
       if (    (!n && (*call2 == ' ' || *call1 == ' ')) /* 1. Zeich. ' ' ? */
@@ -843,7 +843,7 @@ char *id1;
 char *id2;
 
   {
-    static unsigned n;                            /* Zaehler              */
+    static unsigned short n;                            /* Zaehler              */
 
     for (n = 0; n < L2CALEN; ++n)                 /* Calls vergleichen    */
       if (*id2++ != *id1++) return (NO);
@@ -898,7 +898,7 @@ char *dest;
 char *source;
 
   {
-    static unsigned n;                    /* Laengenzaehler               */
+    static unsigned short n;                    /* Laengenzaehler               */
 
     for (n = 0; n < L2CALEN; ++n)         /* Call kopieren                */
       *dest++ = *source++;
@@ -1073,7 +1073,7 @@ LHEAD *hd;
 
 void l2tolx(msg)
 
-unsigned msg;
+unsigned short msg;
 
   {
     l2tol7(msg,lnkpoi,2);               /* Layer 2  ->  Layer 7            */

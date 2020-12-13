@@ -128,7 +128,7 @@ void l2init()
     char       *nextbp;       /* Zeiger auf naechsten Freibuffer          */
     char       *minm;         /* niedrigste nutzbare Freispeicherstelle   */
     char       *maxm;         /* hoechste nutzbare Freispeicherstelle     */
-    unsigned    n;            /* Laufindex                                */
+    unsigned short    n;            /* Laufindex                                */
 
 
     inithd(&rxfl);            /* diverse Listenkoepfe = "leere Liste"     */

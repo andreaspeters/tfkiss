@@ -148,7 +148,7 @@ extern void skpvia();
 extern short upcase();
 
 
-static unsigned par;
+static unsigned short par;
 
 
 /**************************************************************************\
@@ -195,7 +195,7 @@ void sl2par()
 
 void lxinit()
   {
-    unsigned n;
+    unsigned short n;
 
     inithd(&statml);
     inithd(&smonfl);
@@ -256,7 +256,7 @@ void lxinit()
 *                                                                          *
 \**************************************************************************/
 void hpinch(ch)
-unsigned ch;
+unsigned short ch;
 {
   if (Epar == YES) {                 /* Echo eingeschaltet?               */
     if (!incnt && ch == defESC)      /* Kein Hostmode?                    */
@@ -281,7 +281,7 @@ unsigned ch;
 
 void delich()
   {
-    unsigned ch;
+    unsigned short ch;
 
     --incnt;
     ch = *--inbufp & 0xFF;
@@ -537,8 +537,8 @@ void Qcmd()
 void Ucmd()
   {
     char       *txt;
-    unsigned    n;
-    unsigned    ch;
+    unsigned short    n;
+    unsigned short    ch;
 
     if (!incnt)
       {
@@ -665,12 +665,12 @@ void Zcmd()
 
 void listch(chnl)
 
-unsigned chnl;
+unsigned short chnl;
 
   {
-    unsigned    lstate;
-    unsigned    mbnmbr;
-    unsigned    unacked;
+    unsigned short    lstate;
+    unsigned short    mbnmbr;
+    unsigned short    unacked;
     LNKBLK     *linkp;
 
     if (chnl != 0)
@@ -732,13 +732,13 @@ unsigned chnl;
 
 short bgetvl(check,vial)
 
-unsigned    check;
+unsigned short    check;
 char       *vial;
 
   {
     static char        viabuf[L2VLEN + 1];
     static char       *viabp;
-    static unsigned    n;
+    static unsigned short    n;
     static short       getres;
 
     skpvia();
@@ -775,9 +775,9 @@ void skpvia()
     static char        id[L2IDLEN];
     static char       *bpsav;
     static char       *idp;
-    static unsigned    cntsav;
-    static unsigned    n;
-    static unsigned    chr;
+    static unsigned short    cntsav;
+    static unsigned short    n;
+    static unsigned short    chr;
 
     bpsav = inbufp;
     cntsav = incnt;
@@ -808,15 +808,15 @@ void skpvia()
 
 short bgetid(check,gidp)
 
-unsigned    check;
+unsigned short    check;
 char       *gidp;
 
   {
     static char        id[L2IDLEN];
     static char       *idp;
-    static unsigned    innmbr;
-    static unsigned    n;
-    static unsigned    inchr;
+    static unsigned short    innmbr;
+    static unsigned short    n;
+    static unsigned short    inchr;
 
     for (idp = id, n = 0; n < L2CALEN; ++n) *idp++ = ' ';
     *idp = 0x60;
@@ -884,13 +884,13 @@ char       *gidp;
 
 void hputfu(u)
 
-unsigned u;
+unsigned short u;
 
   {
     static BOOLEAN    out;
-    static unsigned   div;
-    static unsigned   digit;
-    static unsigned   n;
+    static unsigned short   div;
+    static unsigned short   digit;
+    static unsigned short   n;
 
     for (out = FALSE, div = 10000, n = 0; n < 5; ++n)
       {

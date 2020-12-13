@@ -298,8 +298,8 @@ int iscd(int i) { i = i; return FALSE; };
 \**************************************************************************/
 void l2tx()
 {
-  static unsigned    l2state;        /* aktueller Linkstate               */
-  static unsigned    n;              /* Laufindex                         */
+  static unsigned short    l2state;        /* aktueller Linkstate               */
+  static unsigned short    n;              /* Laufindex                         */
   static MBHEAD     *sfbp;           /* Sendeframebufferpointer           */
 
   /************************************************************************/
@@ -398,13 +398,13 @@ void l2tx()
 
 void l2rx()
   {
-    static unsigned    l2state;      /* aktueller Level 2 Linkstatus      */
+    static unsigned short    l2state;      /* aktueller Level 2 Linkstatus      */
     static BOOLEAN     tome;         /* YES = Frame ist an mich           */
     static BOOLEAN     raus;         /* FEF Erstickunsbremsflag           */
-    static unsigned    n;            /* Laufindex                         */
+    static unsigned short    n;            /* Laufindex                         */
     static MBHEAD     *fbp;          /* Framebufferpointer lokal          */
     static LNKBLK     *lblkp;        /* Linkblockpointer lokal            */
-    static unsigned    i;            /* FEF Framesammler Kontrollflag     */
+    static unsigned short    i;            /* FEF Framesammler Kontrollflag     */
 
     raus = NO;                /* FEF Mindestens einmal mÅssen wir schon.. */
 
@@ -887,10 +887,10 @@ void l2rx()
 
 void l2rest()
   {
-    static unsigned  n;
-    static unsigned  i;       /* FEF */
+    static unsigned short  n;
+    static unsigned short  i;       /* FEF */
     static char      lflag;
-    static unsigned  l2state;
+    static unsigned short  l2state;
 
   /************************************************************************/
   /* Modifikation zur Geschwindigkeitssteigerung: In dieser Routine sind  */
@@ -971,11 +971,11 @@ void l2rest()
 
 void l2timr(ticks)
 
-unsigned ticks;
+unsigned short ticks;
 
   {
-    static unsigned  n;
-    static unsigned  l2state; /* FEF */
+    static unsigned short  n;
+    static unsigned short  l2state; /* FEF */
     static char      lflag;
 
   /************************************************************************/

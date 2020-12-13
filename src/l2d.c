@@ -71,7 +71,7 @@ extern void reset();
 extern void DIinc();
 extern void decEI();
 extern char sendok;
-extern unsigned nmbfre;
+extern unsigned short nmbfre;
 extern LHEAD freel;
 extern LHEAD rxfl;
 extern LHEAD stfl;
@@ -87,7 +87,7 @@ extern LEHEAD     *relink();
 #endif
 
 /* local function declarations */
-unsigned l1get();
+unsigned short l1get();
 void putchr();
 void rlmlsl();
 void rwndmb();
@@ -145,10 +145,10 @@ void rwndmb();
 
 BOOLEAN l1put(action)
 
-unsigned action;
+unsigned short action;
 
   {
-    unsigned    port;         /* port aus action                          */
+    unsigned short    port;         /* port aus action                          */
     MBHEAD    **rxfbpp;       /* Zeiger auf Zeiger auf aktuelles RX-Frame */
 
     rxfbpp = &rxfhd[port = (action>>8) & 0x7F]; /* Adresse RX-Framezeiger */
@@ -324,12 +324,12 @@ l1put?:   call  ?ens            ; IX/BC Stackframezeiger (Funktionsparameter)
 
 #ifdef PORTABLE
 
-unsigned l1get(action)
+unsigned short l1get(action)
 
-unsigned action;
+unsigned short action;
 
   {
-    unsigned    port;         /* port aus action                          */
+    unsigned short    port;         /* port aus action                          */
     MBHEAD    **txfbpp;       /* Zeiger auf Zeiger auf aktuelles TX-Frame */
     LHEAD      *l2flp;        /* Zeiger auf DWAIT-Framelistenkopf         */
     LNKBLK     *lnktmp;       /* Zeiger auf Link-Block [DL4YBG]           */

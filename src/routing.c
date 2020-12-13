@@ -19,10 +19,10 @@
 #include <memory.h>
 #include <netinet/in.h>
 
-#ifdef __NetBSD__
+//&&&#ifdef __NetBSD__
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#endif
+//&&&#endif
 
 /*
  * Declaration of external functions

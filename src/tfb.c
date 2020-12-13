@@ -126,7 +126,7 @@
 
 #include "kiss.h"
 
-static unsigned par;
+static unsigned short par;
 
 /* external function declarations */
 extern void DIinc();
@@ -174,8 +174,8 @@ extern short upcase();
 \**************************************************************************/
 void extcmd()
   {
-    static unsigned   parnr;
-    static unsigned   cmdch;
+    static unsigned short   parnr;
+    static unsigned short   cmdch;
 
     if (incnt != 0)
       {
@@ -361,7 +361,7 @@ void Ccmd()
   {
     char        id[L2IDLEN];
     char       *idp;
-    unsigned    n;
+    unsigned short    n;
     LNKBLK     *linkp;
 
     if (!incnt)
@@ -465,7 +465,7 @@ void Dcmd()
 \**************************************************************************/
 void Fcmd()
 {
-    unsigned par;
+    unsigned short par;
 
     if (!incnt)
       rsppar(!actch ? Fpar : (lnkpoi->state != L2SDSCED ? lnkpoi->SRTT :
@@ -546,7 +546,7 @@ void Gcmd()
   {
     static BOOLEAN     done;  /* Flag "Hostmodeantwort ausgegeben"        */
     static MBHEAD     *mbp;   /* Zeiger auf Kopf des aktuellen Frames     */
-    static unsigned    n;
+    static unsigned short    n;
 
     if (ishmod == YES)                            /* im Hostmode ?        */
       {
@@ -694,7 +694,7 @@ void Gcmd()
 \**************************************************************************/
 void xGcmd()
 {
-  static unsigned n;                /* index auf Kan„le               */
+  static unsigned short n;                /* index auf Kan„le               */
 
   hmputr(HMRSMSG);                  /* Success with Response          */
 
@@ -764,8 +764,8 @@ void Icmd()
 \**************************************************************************/
 void Lcmd()
   {
-    static unsigned unacked;
-    static unsigned n;
+    static unsigned short unacked;
+    static unsigned short n;
 
     if (!ishmod)
       if (!incnt)
@@ -818,8 +818,8 @@ void Lcmd()
 void Mcmd()
   {
     short getres;
-    unsigned flag;
-    unsigned inchr;
+    unsigned short flag;
+    unsigned short inchr;
 
     if (!incnt)
       {

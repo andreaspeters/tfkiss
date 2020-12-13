@@ -109,7 +109,7 @@ extern void decEI();
 extern void delich();
 extern void frhmon();
 extern void hcrlf();
-extern unsigned hgetc();
+extern unsigned short hgetc();
 extern void hmputr();
 extern void hpinch();
 extern void hputc();
@@ -158,7 +158,7 @@ void tolink();
 \**************************************************************************/
 short mainf()
   {
-    unsigned    cs;
+    unsigned short    cs;
     char       *csp;
 
     DIinc();
@@ -209,8 +209,8 @@ short mainf()
 
 void lx()
   {
-    static unsigned    inchar;
-    static unsigned    n;
+    static unsigned short    inchar;
+    static unsigned short    n;
     static MBHEAD     *mbp;
 
     DIinc();
@@ -584,11 +584,11 @@ void l2tol7(msg,lnk,sel)
 
 char        msg;
 LNKBLK     *lnk;
-unsigned    sel;
+unsigned short    sel;
 
   {
     char       *txt;
-    unsigned    n;
+    unsigned short    n;
     MBHEAD     *mbp;
 
     switch (msg)
@@ -641,14 +641,14 @@ unsigned    sel;
 *                                                                          *
 \**************************************************************************/
 BOOLEAN fmlink(par,fbp)
-unsigned    par;
+unsigned short    par;
 MBHEAD     *fbp;
   {
 
-   static unsigned chnr;
+   static unsigned short chnr;
 
 /* Einschub fuer Remote-Kommando //Q (DG0FT 17.01.93) */
-    unsigned    savmbgc;
+    unsigned short    savmbgc;
     char       *savmbbp;
 
     if (!ishmod && Upar == 2)              /* kein Terminal aktiv      */
@@ -718,7 +718,7 @@ MBHEAD *mbp;
 
 void cmd()
   {
-    static unsigned c;
+    static unsigned short c;
 
     if (nxtnos() == YES)
       {

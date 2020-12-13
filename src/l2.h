@@ -250,26 +250,26 @@ typedef struct lnkblk         /* "link block", fuer jeden Level-2-Link :  */
                               /*   Bit 6 : 1 = (eigenes) Device busy      */
                               /*   Bit 7 : 1 = Link disconnecten, sobald  */
                               /*           Sendeliste (sendil) leer ist   */
-    unsigned IRTT;            /* "Initial Round Trip Time" = Anfangswert  */
-    unsigned RTT;             /* Round-Trip-Timer (10 ms)                 */
-    unsigned SRTT;            /* Smoothed Round Trip Timer                */
+    unsigned short IRTT;            /* "Initial Round Trip Time" = Anfangswert  */
+    unsigned short RTT;             /* Round-Trip-Timer (10 ms)                 */
+    unsigned short SRTT;            /* Smoothed Round Trip Timer                */
                               /* SRTT = (Alpha x SRTT + RTT)/(Alpha + 1)  */
     /* [DL4YBG] */
-    unsigned IT1;             /* Init-Wert fuer Timer 1 (a3*SRTT)         */
+    unsigned short IT1;             /* Init-Wert fuer Timer 1 (a3*SRTT)         */
                               /* noetig, da T1-Timer jetzt aus Interrupt  */
                               /* gestartet wird (l1get) und eine Multi-   */
                               /* plikation mit a3 zuviel Zeit kostet      */
     /* ende */
-    unsigned T1;              /* Timer 1, "frame acknowledge interval",   */
+    unsigned short T1;              /* Timer 1, "frame acknowledge interval",   */
                               /* Start :  SRTT,                           */
                               /* 0 = inaktiv, 10 msec Downcounter         */
-    unsigned T2;              /* Timer T2, "response delay timer",        */
+    unsigned short T2;              /* Timer T2, "response delay timer",        */
                               /* 0 = inaktiv, 10 msec Downcounter         */
-    unsigned T3;              /* Timer T3, "inactive link timer",         */
+    unsigned short T3;              /* Timer T3, "inactive link timer",         */
                               /* 0 = inaktiv, 10 msec Downcounter         */
-    unsigned rcvd;            /* "received", Anzahl empfangener I-Frames  */
+    unsigned short rcvd;            /* "received", Anzahl empfangener I-Frames  */
                               /* in rcvdil                                */
-    unsigned tosend;          /* Anzahl noch nicht gesendete oder         */
+    unsigned short tosend;          /* Anzahl noch nicht gesendete oder         */
                               /* unbestaetigte Frames in sendil           */
     LHEAD    rcvdil;          /* "received info list", richtig            */
                               /* empfangene I-Frames, mit Header/PID      */
@@ -314,9 +314,9 @@ typedef struct mbhead         /* "message buffer head",                   */
                               /*   ersten Infobuffer dieser Message       */
     char            *mbbp;    /*   "message buffer buffer pointer",       */
                               /*   Zeiger auf aktuelles Zeichen in Buffer */
-    unsigned         mbpc;    /*   "message buffer put count",            */
+    unsigned short         mbpc;    /*   "message buffer put count",            */
                               /*   Einschreibzaehler, aufwaertszaehlend   */
-    unsigned         mbgc;    /*   "message buffer get count",            */
+    unsigned short         mbgc;    /*   "message buffer get count",            */
                               /*   Lesezaehler, aufwaertszaehlend         */
     struct lnkblk   *l2link;  /*   Zeiger auf assozierten Linkblock       */
     char             type;    /*   Typ des Buffers (User, Status)         */
@@ -336,7 +336,14 @@ typedef struct mbhead         /* "message buffer head",                   */
                               /*     NO  = sonst                          */
     char             rsvd[10];/*   (damit insgesamt Laenge wie mb)        */
     TIMEBL           btime;   /*   Buffer-Time fuer Zeit/Datum-Stamps     */
-    char            rsvd2[24];/* FEF */
+    /* hb9xar: Durch 64bit Pointer (sind 8 Byte anstelle von 4 Bytes bei 
+       32bit Systemem) wird diese Struktur groesser.
+       Kompensation der Laenge durch Reduktion von rsvd2:
+       - MBHEAD: 4x Ptr 
+       - LHEAD:  2x Ptr
+       => 6x 4 Bytes = 24 Bytes - damit wird rsvd2[24] auf 0 resized */
+//&&&    char            rsvd2[24];/* FEF */
+    char            rsvd2[0];/* FEF */
 
   } MBHEAD;
 
@@ -347,9 +354,10 @@ typedef struct mb             /* "message buffer",                        */
   {                           /* allgemeiner Datenbuffer :                */
     struct mb *nextmb;        /*   naechster Eintrag in Liste             */
     struct mb *prevmb;        /*   vorheriger Eintrag in Liste            */
+    /* hb9xar: *muessen* 64 bytes data[] sein, darauf verlaesst sich
+       der Code an diversen Stellen. Resize hier -> SEGV */
     char       data[64];      /*   Daten           [DG2FEF]               */
   } MB;
-
 
 
 typedef struct stentry        /* "state table entry",                     */

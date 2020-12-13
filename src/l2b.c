@@ -194,7 +194,7 @@ void newlnk()
 
 void dsclnk()                                        /* FEF */
   {
-    static unsigned lstate;
+    static unsigned short lstate;
 
     if (   (lstate = lnkpoi->state) == L2SLKSUP
         || lstate == L2SDSCRQ
@@ -254,7 +254,7 @@ MBHEAD *fbp;
 
   {
     static char       *viap;                      /* Zeiger in via-Liste  */
-    static unsigned    n;                         /* Zaehler              */
+    static unsigned short    n;                         /* Zaehler              */
 
     viap = rxfhdr + L2ILEN;                       /* Anfang via-Liste     */
     while (*viap != '\0')                         /* via-Liste durchgehen */
@@ -264,7 +264,7 @@ MBHEAD *fbp;
             if (Rpar == YES && istome(viap) == TRUE)   /* ja, darf ich    */
               {                                        /* und muss ich :  */
                 rwndmb(fbp);                           /* Zeiger auf Hbit */
-                n = (unsigned)(viap - (rxfhdr+L2ILEN) + (L2ILEN+L2IDLEN));
+                n = (unsigned short)(viap - (rxfhdr+L2ILEN) + (L2ILEN+L2IDLEN));
                 while (n-- != 0) getchr(fbp);          /* berechnen       */
                 *(fbp->mbbp - 1) |= L2CH;              /* Hbit setzen     */
                 viap += L2IDLEN;                       /* Nachbardigi     */
@@ -301,7 +301,7 @@ MBHEAD *fbp;
 \**************************************************************************/
 void i2tolx(nocgnc)
 
-unsigned nocgnc;
+unsigned short nocgnc;
 
   {
     static MBHEAD *rcvdip;   /* Zeiger auf Framekopf weiterzureichendes I */
@@ -336,10 +336,10 @@ unsigned nocgnc;
 
 BOOLEAN srxdNR()
   {
-    static unsigned rxdNR;   /* empfangenes N(R)                          */
-    static unsigned newok;   /* Anzahl neu bestaetigte I's                */
-    static unsigned outstd;  /* Anzahl ausstehende (nicht bestaetigte) I's*/
-    static unsigned l2state; /* Linkstatus des aktuellen Links            */
+    static unsigned short rxdNR;   /* empfangenes N(R)                          */
+    static unsigned short newok;   /* Anzahl neu bestaetigte I's                */
+    static unsigned short outstd;  /* Anzahl ausstehende (nicht bestaetigte) I's*/
+    static unsigned short l2state; /* Linkstatus des aktuellen Links            */
 
     if ((l2state = lnkpoi->state) >= L2SIXFER)    /* darf N(R) kommen ?   */
       {
@@ -423,9 +423,9 @@ BOOLEAN srxdNR()
 *                                                                          *
 \**************************************************************************/
 
-unsigned isnxti()
+unsigned short isnxti()
   {
-    static unsigned iseqno;                       /* I Sequence Number    */
+    static unsigned short iseqno;                       /* I Sequence Number    */
 
     if (lnkpoi->state >= L2SIXFER) {                      /* I-Transfer ? */
       if ((iseqno = (rxfctl >> 1) & 0x07) == lnkpoi->VR)  /* I erwartet ? */
@@ -508,7 +508,7 @@ void inilnk()
 void setiSRTT()
   {
     char       *viap;                   /* Zeiger in via-Liste            */
-    unsigned    n;                      /* Digizaehler                    */
+    unsigned short    n;                      /* Digizaehler                    */
 
     viap = lnkpoi->viaidl;              /* Anfang via-Liste               */
     n = 0;                              /* noch kein Digi gezaehlt        */
@@ -706,10 +706,10 @@ void sdoi()
 
 void sdi(max)
 
-unsigned max;
+unsigned short max;
 
   {
-    static unsigned    n;                    /* Zaehler zu sendende Infos */
+    static unsigned short    n;                    /* Zaehler zu sendende Infos */
     static MBHEAD     *sendip;               /* Kopfzeiger Infobuffer     */
     static MBHEAD     *fbp;                  /* Kopfzeiger Framebuffer    */
 
@@ -804,16 +804,16 @@ void sdipoll()
 
 BOOLEAN splcpy(max,fbp,mbhd)
 
-unsigned    max;
+unsigned short    max;
 MBHEAD     *fbp;
 MBHEAD     *mbhd;
 
   {
     char       *mbbpsa;                 /* Sicherung mbbp                 */
     BOOLEAN     split;                  /* TRUE: Split erfolgt            */
-    unsigned    mbgcsa;                 /* Sicherung mbgc                 */
-    unsigned    mbgc2;                  /* mbgc alt -> mbpc alt           */
-    unsigned    n;                      /* Zaehler                        */
+    unsigned short    mbgcsa;                 /* Sicherung mbgc                 */
+    unsigned short    mbgc2;                  /* mbgc alt -> mbpc alt           */
+    unsigned short    n;                      /* Zaehler                        */
     MBHEAD     *mbhd2;                  /* Kopfzeiger neuer Messagebuffer */
 
     split = NO;                         /* zunaechst nichts gesplittet    */
@@ -860,7 +860,7 @@ void sdui(vial,dest,source,port,mbhd)
 char     *vial;
 char     *dest;
 char     *source;
-unsigned  port;
+unsigned short  port;
 MBHEAD   *mbhd;
 
   {

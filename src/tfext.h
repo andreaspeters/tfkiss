@@ -58,7 +58,7 @@ extern BOOLEAN     digipt();                      /* L2...                */
 extern BOOLEAN     srxdNR();
 extern BOOLEAN     isnxti();
 extern BOOLEAN     splcpy();
-extern unsigned    setNR();
+extern unsigned short    setNR();
 extern MBHEAD     *cpyfb();
 extern BOOLEAN     takfhd();
 extern BOOLEAN     getfid();
@@ -68,7 +68,7 @@ extern BOOLEAN     cmpcal();
 extern BOOLEAN     cmpidl();
 extern BOOLEAN     cmpid();
 extern BOOLEAN     l1put();
-extern unsigned    l1get();
+extern unsigned short    l1get();
 extern LEHEAD     *allocb();
 extern LEHEAD     *tfunlink();
 extern LEHEAD     *relink();
@@ -77,13 +77,13 @@ extern short       getchr();
 
 
 extern BOOLEAN     fmlink();                      /* TF...                */
-extern unsigned    bgetp();
+extern unsigned short    bgetp();
 extern BOOLEAN     ismonf();
-extern unsigned    mbcnt();
+extern unsigned short    mbcnt();
 extern MBHEAD     *selmb();
 extern BOOLEAN     invial();
 extern BOOLEAN     nxtnos();
-extern unsigned    nbrprt();
+extern unsigned short    nbrprt();
 extern BOOLEAN     iswarm();
 
 extern short       mainf();
@@ -117,16 +117,16 @@ extern char        defDp;
 extern char        defUIp;
 extern char        defxSp;
 extern char        defxFp;
-extern unsigned    defT2p;
-extern unsigned    defT3p;
-extern unsigned    defFp;
+extern unsigned short    defT2p;
+extern unsigned short    defT3p;
+extern unsigned short    defFp;
 extern char        defIPp;
 extern char        defA3p;
 
 extern char        defxTAp;
 
-extern unsigned    p1end;
-extern unsigned    p2strt;
+extern unsigned short    p1end;
+extern unsigned short    p2strt;
 
 
 
@@ -146,18 +146,18 @@ extern char        txfPF;
 extern char        txfV2;
 extern char        txfCR;
 extern char        txfprt;
-extern unsigned    Fpar;
-extern unsigned    Ipar;
-extern unsigned    Opar;
-extern unsigned    Npar;
-extern unsigned    T2par;
-extern unsigned    T3par;
-extern unsigned    A3par;
+extern unsigned short    Fpar;
+extern unsigned short    Ipar;
+extern unsigned short    Opar;
+extern unsigned short    Npar;
+extern unsigned short    T2par;
+extern unsigned short    T3par;
+extern unsigned short    A3par;
 extern char        UIpar;
 extern char        damaok;
-extern unsigned    Rpar;
-extern unsigned    damati;
-extern unsigned    nmbfre;
+extern unsigned short    Rpar;
+extern unsigned short    damati;
+extern unsigned short    nmbfre;
 extern LHEAD       freel;
 extern LHEAD       rxfl;
 extern LHEAD       stfl;
@@ -194,26 +194,26 @@ extern char        hmstat;
 extern char        hmch;
 extern char        hmcmd;
 extern char        hmlen;
-extern unsigned    incnt;
-extern unsigned    isctlr;
-extern unsigned    ticks;
-extern unsigned    oldtic;
-extern unsigned    newtic;
-extern unsigned    Utcnt;
-extern unsigned    VCpar;
-extern unsigned    magicn;
+extern unsigned short    incnt;
+extern unsigned short    isctlr;
+extern unsigned short    ticks;
+extern unsigned short    oldtic;
+extern unsigned short    newtic;
+extern unsigned short    Utcnt;
+extern unsigned short    VCpar;
+extern unsigned short    magicn;
 extern MBHEAD     *mifmbp;
 extern LHEAD       statml;
 extern LHEAD       smonfl;
 extern LHEAD       chnlml[];
-extern unsigned    chnlbc[];  /* FEF fÅr Flow-Control */
+extern unsigned short    chnlbc[];  /* FEF fÅr Flow-Control */
 
-extern unsigned    loops;     /* HauptschleifendurchlÑufe */
-extern unsigned    rps;       /* Rounds per Second */
+extern unsigned short    loops;     /* HauptschleifendurchlÑufe */
+extern unsigned short    rps;       /* Rounds per Second */
 #ifdef USE_XPID
 extern char        UItxPID;
 #endif
-extern unsigned    sec100;
+extern unsigned short    sec100;
 #ifndef TFKISS_MAIN
 extern TIMEBL      tftime;
 #endif
@@ -224,16 +224,16 @@ extern char        xTApar;
 
 extern char        stmem[];
 extern char        stack;
-extern unsigned    fremem;
+extern unsigned short    fremem;
 
 extern char        cqid[];
-extern unsigned    conctl;
+extern unsigned short    conctl;
 extern char       *l2msgs[];
 extern void      (*cmdtab[])();
 
 extern int         fulldup_on_dama;
 
 
-extern unsigned    end;                           /* CRUNTIME             */
+extern unsigned short    end;                           /* CRUNTIME             */
 
 /* Ende von TFEXT.H */
