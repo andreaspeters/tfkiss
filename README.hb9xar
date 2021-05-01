@@ -13,6 +13,9 @@ $ CFLAGS='-ggdb' ./configure --enable-hibaud --enable-xpid --enable-axip
 $ make clean && make
 
 
+73 de Thomas, HB9XAR
+
+
 History
 -------
 2020-12-13 hb9xar	- imported tfkiss-1.2.4

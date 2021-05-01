@@ -33,9 +33,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #ifdef __NetBSD__
 #include <sys/socket.h>
-#include <arpa/inet.h>
 #endif
 #include "axip.h"
 #endif
