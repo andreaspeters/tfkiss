@@ -125,9 +125,9 @@ static struct hostqueue *hostq_root;
 static struct hostqueue *hostq_last;
 static int hostq_len;
 
-char device[MAXCHAR];
-int speed;
-int speedflag;
+extern char device[MAXCHAR];
+extern int speed;
+extern int speedflag;
 int use_socket;
 static int terminated;
 static int kisslink;
