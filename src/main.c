@@ -586,6 +586,9 @@ BOOLEAN ishput()
 void hputc(char ch)
 {
   int res;
+//#ifdef DEBUG  
+//  printf("Debug hputc: = 0x%02X (%d)\n", ch, ch);  
+//#endif
 
   if (use_socket) {
     if (connected) {
@@ -623,6 +626,14 @@ static void host_to_queue(char *buffer,int len)
   char *bufptr;
   int i;
   
+#ifdef DEBUG  
+  printf("Debug host_to_queue: ");
+  for (size_t i = 0; i < len; i++) {
+      printf("%d ", buffer[i]);
+  }
+  printf("\n");
+#endif
+
   bufptr = buffer;
   i = 0;
   while (i < len) {
@@ -1189,12 +1200,18 @@ int main(int argc,char *argv[])
   }
 
   if (axip_active) {
+#ifdef DEBUG          
+    printf("Use AXIP\n");
+#endif          
     if (init_axip()) {
       free(buffers);
       exit(1);
     }
   }
   if (kiss_active) {
+#ifdef DEBUG          
+    printf("Use KISS\n");
+#endif          
     if (init_kisslink(device,speed,speedflag,unlock)) {
       free(buffers);
       if (axip_active)
@@ -1204,6 +1221,9 @@ int main(int argc,char *argv[])
   }
   
   if (use_socket) {
+#ifdef DEBUG          
+    printf("Use Socket\n");
+#endif          
     if (use_socket == 2) {
       saddr = build_sockaddr(tfkiss_socket,&servlen);
       if (!saddr) {
@@ -1265,8 +1285,10 @@ int main(int argc,char *argv[])
     printf(SIG_D);
     printf(SIG6);
 
+#ifndef DEBUG    
     if (fork() != 0)
       exit(0);
+#endif
 
     if (init_proc()) {
       free(buffers);
@@ -1277,13 +1299,18 @@ int main(int argc,char *argv[])
         exit_kisslink();
       exit(1);
     }
+#ifdef DEBUG          
+    printf("Init ok\n");
+#endif          
 
+#ifndef DEBUG    
     close(0);
     close(1);
     close(2);
     chdir("/");
     setsid();
     signal(SIGPIPE, SIG_IGN);
+#endif    
   }
   else {
 
@@ -1452,6 +1479,9 @@ int main(int argc,char *argv[])
       else {
         if (FD_ISSET(consockfd,&rmask)) {
           len = read(consockfd,buffer,1024);
+#ifdef DEBUG          
+          printf("ReadFromSocket Debug: buffer = 0x%02X (%d)\n", buffer, buffer);
+#endif          
           if ((len == -1) || (len == 0)) {
             close(consockfd);
             connected = 0;

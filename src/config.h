@@ -1,6 +1,7 @@
 /* src/config.h.  Generated from config.h.in by configure.  */
 /* src/config.h.in.  Generated automatically from configure.in by autoheader.  */
 
+//#define DEBUG 0
 /* Define to empty if the keyword does not work.  */
 /* #undef const */
 
@@ -116,13 +117,13 @@
 #define HAVE_CRTSCTS 1
 
 /* define USE_HIBAUD for baudrates above 38400 baud (Linux only) */
-#define USE_HIBAUD 1
+/* #undef USE_HIBAUD */
 
 /* define USE_AXIP for ax25 encapsulation in ip packets */
-#define USE_AXIP 1
+/* #undef USE_AXIP */
 
 /* define USE_XPID if pid is changeable */
-#define USE_XPID 1
+/* #undef USE_XPID */
 
 /* define USE_FLEXDEC for support of decoded flexnet node frames */
 /* #undef USE_FLEXDEC */

@@ -756,6 +756,9 @@ int init_proc()
 {
   FILE *fp;
   pid_t pid;
+#ifdef DEBUG          
+  printf("Init\n");
+#endif          
 
   fp = fopen(tfkiss_procfile,"w+");
   if (fp == NULL) {

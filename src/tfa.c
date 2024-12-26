@@ -64,8 +64,8 @@
 *                   der Unattended-Mode (U1) eingeschaltet ist.            *
 *                                                                          *
 *                   DG0FT, DB2OS, 21.6.93                                  *
-*                   im l2tol7() und fmlink() Abfrage auf Upar geÑndert,    *
-*                   soda· die //Q-Funktion nur noch aktiv ist, wenn        *
+*                   im l2tol7() und fmlink() Abfrage auf Upar ge?ndert,    *
+*                   soda? die //Q-Funktion nur noch aktiv ist, wenn        *
 *                   Upar == 2 ist.                                         *
 *                                                                          *
 *                   DB2OS, 01.07.93                                        *
@@ -73,7 +73,7 @@
 *                   Siehe auch xGcmd() in TFB.C                            *
 *                                                                          *
 *                   DB2OS,  27.08.94                                       *
-*                   mainf() und lx(): ZÑhler loops und rps fÅr RPS-Anzeige *
+*                   mainf() und lx(): Z?hler loops und rps f?r RPS-Anzeige *
 *                                     eingebaut.                           *
 *                   DL8HBS, 19.10.94                                       *
 *                   in lx() und l2tol7() wird die txPID nun aus            *
@@ -94,6 +94,7 @@
 /*                                                             Includes   */
 /**************************************************************************/
 
+#include <stdio.h>
 #include "all.h"         /* allgemeine Festlegungen                       */
 #include "tf.h"          /* Festlegungen/Datenstrukturen fuer TheFirmware */
 #include "l2.h"          /* Festlegungen/Datenstrukturen fuer den Level 2 */
@@ -195,7 +196,7 @@ short mainf()
       l2tx();
       l2rest();
       lx();
-      loops++;                      /* SchleifenzÑhler fÅr RPS-Berechnung */
+      loops++;                      /* Schleifenz?hler f?r RPS-Berechnung */
     }
   }
 
@@ -671,10 +672,10 @@ MBHEAD     *fbp;
 
     chnr = fbp->l2link - lnktbl;           /* Kanalnummer des Links .. */
 
-    if (!(par || Upar)) {               /* Wenn Flow-Control erwÅnscht */
+    if (!(par || Upar)) {               /* Wenn Flow-Control erw?nscht */
 
              /* Bytezahl im Kanal testen, wenn mehr als erlaubt,  */
-             /* Frame vom L2 zurÅckweisen                         */
+             /* Frame vom L2 zur?ckweisen                         */
              /* Falls bereits BUSY, warten, bis der Kanal frei ist*/
 
       if (fbp->l2link->flag & L2FBUSY)
@@ -686,7 +687,7 @@ MBHEAD     *fbp;
     }
     chnlbc[chnr] += fbp->mbpc;        /* Bytezahl im Kanal aufaddieren */
     fbp->type = L2MNIX;                    /* Buffer-Typ setzen        */
-    relink(tfunlink(fbp),chnlml[chnr].tail); /* einhÑngen am Listenende  */
+    relink(tfunlink(fbp),chnlml[chnr].tail); /* einh?ngen am Listenende  */
     return(TRUE);                          /* alles klar ...           */
   }
 
@@ -723,6 +724,9 @@ void cmd()
     if (nxtnos() == YES)
       {
         c = upcase(*inbufp++ & 0xFF);
+#ifdef DEBUG
+        printf("Command: %c\n", (char)c);
+#endif        
         --incnt;
         nxtnos();
         if (c >= '@' && c <= 'Z')

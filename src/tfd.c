@@ -115,6 +115,7 @@
 /*                                                             Includes   */
 /**************************************************************************/
 
+#include <stdio.h>
 #include "all.h"         /* allgemeine Festlegungen                       */
 #include "version.h"     /* FEF enth„lt nur Versionsstring                */
 #include "tf.h"          /* Festlegungen/Datenstrukturen fuer TheFirmware */
@@ -404,6 +405,9 @@ void Hcmd()
 
 void Jcmd()
   {
+#ifdef DEBUG
+    printf("Set Hostmode\n");    
+#endif    
     if (incnt >= 4)
       if (upcase(*inbufp++) == 'H')
         if (upcase(*inbufp++) == 'O')
