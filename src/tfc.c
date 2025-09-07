@@ -51,6 +51,10 @@
 *                   DL4YBG, 13.02.95 (DG0FT, 16.01.95)                     *
 *                   frhmon(): bei SABM und UA ggf. FlexNet-QSO-Nummer      *
 *                             ausgeben                                     *
+*                                                                          *
+*                   DC6AP, 07.09.2025                                      *
+*                   ismonf(): APRS UI Frames immer im Monitor Channel      *
+*                             ausgeben                                     *
 \**************************************************************************/
 
 
@@ -1215,6 +1219,13 @@ MBHEAD *fbp;
     if (!actch || !lnkpoi->state || (Mpar & MONC) != NO)
       {
         takfhd(fbp);
+
+
+        /* Immer UI-Frames zulassen */
+        if (rxfctl == L2CUI) {
+            return YES;
+        }
+
         if (    (!(rxfctl & L2CNOIM) && (Mpar & MONI) != 0)
              || ((rxfctl & 3) == 1 && (Mpar & MONS) != 0)
              || (((rxfctl & 3) == 3 && rxfctl != L2CUI) && (Mpar & MONS) != 0)

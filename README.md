@@ -1,3 +1,5 @@
+# TFKiss for Linux
+
 This is a modified version of tfkiss-1.2.4 that will build and
 run on 64-bit systems. The original tfkiss versions has some issues with
 sizes of datatypes (like pointers) that are differend on 64-bit systems,
@@ -6,6 +8,12 @@ causing SEGVs at runtime.
 For building information, please check the file README.hb9xar
 
 The original README content follows below.
+
+## Changes
+
+### v1.3.0
+
+- ADD: Show APRS UI Frames in Monitor Channel.
 
 ----------------------
 

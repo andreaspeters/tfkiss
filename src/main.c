@@ -113,6 +113,8 @@ extern int kisstype;
 extern int kiss_active;
 extern int axip_active;
 
+static void framedata_to_queue(char *buffer,int len);
+
 #define HOSTQ_BUFLEN 1024
 struct hostqueue {
   int first;
@@ -764,7 +766,11 @@ static void kissframe_to_tnc()
 static void frame_to_l1(char *buffer,int len)
 {
   int i;
-  
+
+#ifdef DEBUG
+  printf("frame_to_l1: rx_port=%d len=%d, buffer=\"%.*s\"\n", rx_port, len, len, buffer);
+#endif
+
   l1put((short)(0x8001 + rx_port * 0x100));
   for (i=0;i<len;i++) {
     l1put((short)(0x0000+(buffer[i]&0xFF)+rx_port*0x100));
@@ -971,7 +977,20 @@ static void framedata_to_queue(char *buffer,int len)
   int i;
   char ch;
   char tmpstr[MAXCHAR];
-  
+
+#ifdef DEBUG
+  if (len >= MAXCHAR) len = MAXCHAR - 1;
+  for (i = 0; i < len; i++) {
+      char c = buffer[i];
+      if (c >= 32 && c <= 126)    // druckbare ASCII-Zeichen
+          tmpstr[i] = c;
+      else
+          tmpstr[i] = '.';        // Platzhalter für Nicht-ASCII
+  }
+  tmpstr[len] = '\0';
+  printf("framedata_to_queue: len=%d, buffer=\"%s\"\n", len, tmpstr);
+#endif
+
   i = 0;
   bufptr = buffer;
   while (i < len) {
@@ -1028,6 +1047,20 @@ static void framedata_to_queue(char *buffer,int len)
       switch (ch) {
       case FEND:
         frame_valid(rx_buffer,rx_buflen,kisstype);
+#ifdef DEBUG
+        {
+          int j;
+          printf("framedata_to_queue: COMPLETE frame received, len=%d\n", rx_buflen);
+          printf("  Data (ASCII): \"");
+          for (j = 0; j < rx_buflen; j++) {
+            char c = rx_buffer[j];
+            if (c >= 32 && c <= 126)
+              putchar(c);
+            else
+              putchar('.');
+          }
+        }
+#endif
         rx_state = ST_PORT;
         break;
       case FESC:
@@ -1479,8 +1512,8 @@ int main(int argc,char *argv[])
       else {
         if (FD_ISSET(consockfd,&rmask)) {
           len = read(consockfd,buffer,1024);
-#ifdef DEBUG          
-          printf("ReadFromSocket Debug: buffer = 0x%02X (%d)\n", buffer, buffer);
+#ifdef DEBUG
+          printf("ReadFromSocket Debug: buffer[0] = 0x%02X (%d)\n", (unsigned char)buffer[0], (unsigned char)buffer[0]);
 #endif          
           if ((len == -1) || (len == 0)) {
             close(consockfd);
