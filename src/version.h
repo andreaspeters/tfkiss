@@ -42,5 +42,6 @@
 #define SIG5 "         Linux-porting copyright (c) 1995-1996 by Mark Wahl, DL4YBG\015\012"
 #define SIG7 "          solaris-porting copyright (c) 1999 by hans mayer, oe1smc \015\012"
 #define SIG8 "        netbsd-porting copyright (c) 1999 by Berndt Josef Wulf, VK5ABN\015\012"
+#define SIG9 "                Copyright (c) 2025 by Andreas Peters, DC6AP\015\012"
 #define SIG6 "\015\012"
-#define SIG_D "                         version 1.2.3 - 12/05/2000 \015\012"
+#define SIG_D "                         version 1.3.0 - 07/09/2025 \015\012"

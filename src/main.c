@@ -1315,6 +1315,7 @@ int main(int argc,char *argv[])
     printf(SIG5);
     printf(SIG7);
     printf(SIG8);
+    printf(SIG9);
     printf(SIG_D);
     printf(SIG6);
 
