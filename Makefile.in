@@ -7,7 +7,7 @@ PKG_REL   = 1.$(DISTRO)
 CONTENTS  = local/sbin/tfkiss local/share/tfkiss
 VERSION   = 1.3.0
 FPM_OPTS :=  -t deb --architecture native \
-             --url "https://www.hamradiotechblog.de" \
+             --url "https://www.hamradiotech.de" \
              --license "Allgemeine Lizenz fuer Amateurfunk Software (ALAS)" \
              --maintainer "Andreas Peters, DC6AP"
 
