@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=TFKISS
+Exec=/usr/bin/tfkiss
+Icon=tfkiss
+Type=Application
+Categories=Utility;

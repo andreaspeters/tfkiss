@@ -66,3 +66,7 @@ src/tfkiss
 # test directories
 tmp_log
 tmp_cfg
+
+appimage/tfkiss/usr
+*.AppImage
+*.deb
