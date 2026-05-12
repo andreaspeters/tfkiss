@@ -21,6 +21,7 @@
 #define DEF_SPEED B19200
 #define DEF_SPEEDFLAG 0
 #define DEF_DEVICE "/dev/cua0"
+#define DEF_BLUETOOTH_MAC ""
 #define DEF_FULLDUP_ON_DAMA 1
 
 /* init variables for TF */

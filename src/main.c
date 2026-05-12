@@ -36,15 +36,21 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <sys/un.h>
-#include <netdb.h>
-#include "config.h"
+ #include <sys/un.h>
+ #include <netdb.h>
+ #include "config.h"
+ 
+ #ifdef HAVE_ERRNO_H
+ #include <errno.h>
+ #endif
 
-#ifdef HAVE_ERRNO_H
-#include <errno.h>
-#endif
+ #ifdef USE_BLUETOOTH
+ #include <sys/socket.h>
+ #include <bluetooth/bluetooth.h>
+ #include <bluetooth/rfcomm.h>
+ #endif
 
-#ifdef USE_HIBAUD
+ #ifdef USE_HIBAUD
 #include <sys/ioctl.h>
 #include <linux/fs.h>
 #include <linux/tty.h>
@@ -105,7 +111,6 @@ void dotokiss();
 #define CRCLEN 2
 #define MAXKISSLEN MAXFRAMELEN+CRCLEN
 
-extern char tfkiss_lockfile[];
 extern char tfkiss_errfile[];
 extern char tfkiss_socket[];
 extern char tfkiss_run_dir[];
@@ -134,6 +139,8 @@ int use_socket;
 static int terminated;
 static int kisslink;
 static int lock;
+extern char bluetooth_mac[MAXCHAR];
+extern int use_bluetooth;
 static int sockfd;
 static int consockfd;
 static int connected;
@@ -359,37 +366,71 @@ void exit_console()
   tcsetattr(0,TCSADRAIN,&okbd_termios);
 }
 
-static int init_kisslink(char *serstr,int speed,
-                         int speedflag,int unlock)
+static int init_kisslink(char *serstr,int speed, int speedflag,int unlock) 
 {
+#ifdef USE_BLUETOOTH
+  struct sockaddr_rc addr = { 0 };
+  int btsock;
+#endif
 #ifdef USE_HIBAUD
   struct serial_struct ser_io;
 #endif
-  
-  if (unlock) unlink(tfkiss_lockfile);
-  if ((lock = open(tfkiss_lockfile,O_CREAT|O_EXCL,0600)) == -1) {
-    printf("Error: kisslink port locked by other user"
-           " or unable to create lockfile\n");
+  int is_bluetooth = 0;
+    
+#ifdef USE_BLUETOOTH
+  if (use_bluetooth && strlen(bluetooth_mac) > 0) {
+    is_bluetooth = 1;
+    printf("Use Bluetooth RFCOMM device %s\n", bluetooth_mac);
+    if ((btsock = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)) == -1) {
+      printf("Error: can't create Bluetooth RFCOMM socket\n");
+      return(1);
+    }
+     
+    addr.rc_family = AF_BLUETOOTH;
+    {
+      unsigned int h1,h2,h3,h4,h5,h6;
+      if (sscanf(bluetooth_mac,"%2x:%2x:%2x:%2x:%2x:%2x", &h1,&h2,&h3,&h4,&h5,&h6) != 6) {
+        printf("Error: invalid Bluetooth MAC address format\n");
+        close(btsock);
+        return(1);
+      }
+      addr.rc_bdaddr.b[5] = h1;
+      addr.rc_bdaddr.b[4] = h2;
+      addr.rc_bdaddr.b[3] = h3;
+      addr.rc_bdaddr.b[2] = h4;
+      addr.rc_bdaddr.b[1] = h5;
+      addr.rc_bdaddr.b[0] = h6;
+    }
+    addr.rc_channel = (uint8_t)1;
+     
+    if (connect(btsock, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+      printf("Error: can't connect to Bluetooth device %s\n", bluetooth_mac);
+      close(btsock);
+      return(1);
+    }
+     
+    kisslink = btsock;
+  } else {
+    if ((kisslink = open(serstr,O_RDWR|O_NONBLOCK)) == -1) {
+      printf("Error: can't open kisslink port %s \n", serstr );
+      return(1);
+    }
+  }
+#else
+  if ((kisslink = open(serstr,O_RDWR|O_NONBLOCK)) == -1) {
+    printf("Error: can't open kisslink port %s \n", serstr );
     return(1);
   }
-  if ((kisslink = open(serstr,O_RDWR|O_NONBLOCK)) == -1) {
-      printf("Error: can't open kisslink port %s \n", serstr );
-      close(lock);
-      unlink(tfkiss_lockfile);
-      return(1);
-  }
+#endif
 #ifdef DEBUG
-  else 
-      printf ( "successfully opened kisslink port %s \n", serstr );
+  printf ( "successfully opened kisslink port \n");
 #endif 
   tcgetattr(kisslink,&org_termios);
 #ifdef USE_HIBAUD
-  if (speed == B38400) {
+  if (speed == B38400 && !is_bluetooth) {
     if (ioctl(kisslink,TIOCGSERIAL, &ser_io) < 0) {
       printf("Error: can't get kisslink info\n");
       close(kisslink);
-      close(lock);
-      unlink(tfkiss_lockfile);
       return(1);
     }
   }
@@ -414,15 +455,10 @@ static int init_kisslink(char *serstr,int speed,
   cfsetispeed(&wrk_termios,speed);
   cfsetospeed(&wrk_termios,speed);
 #ifdef USE_HIBAUD
-  if (speed == B38400) {
-    ser_io.flags &= ~ASYNC_SPD_MASK;
-    ser_io.flags |= speedflag;
-    if (ioctl(kisslink,TIOCSSERIAL, &ser_io) < 0) {
-      printf("Error: can't set kisslink info\n");
-      tcsetattr(kisslink,TCSADRAIN,&org_termios);
+  if (speed == B38400 && !is_bluetooth) {
+    if (ioctl(kisslink,TIOCGSERIAL, &ser_io) < 0) {
+      printf("Error: can't get kisslink info\n");
       close(kisslink);
-      close(lock);
-      unlink(tfkiss_lockfile);
       return(1);
     }
   }
@@ -437,12 +473,15 @@ static int init_kisslink(char *serstr,int speed,
 
   return(0);
 }
-
+ 
 static int exit_kisslink()
 {
-  tcsetattr(kisslink,TCSADRAIN,&org_termios);
-  close(lock);
-  unlink(tfkiss_lockfile);
+  if (use_bluetooth && strlen(bluetooth_mac) > 0) {
+    close(kisslink);
+  } else {
+    tcsetattr(kisslink,TCSADRAIN,&org_termios);
+    close(kisslink);
+  }
   return(0);
 }
 
@@ -602,7 +641,7 @@ void hputc(char ch)
     }
   }
   else {
-    write(1,&ch,1);
+    (void)((write(1,&ch,1) == -1) ? 0 : 1);
   }
 }
 
@@ -679,7 +718,7 @@ void send_kisscmd(int cmd,int value)
   }
   *tx_bufptr++ = FEND;
   len++;
-  write(kisslink,tx_buffer,len);
+  (void)((write(kisslink,tx_buffer,len) == -1) ? 0 : 1);;
 }
 
 /* send all frames in txbuffer over kisslink */
@@ -758,7 +797,7 @@ static void kissframe_to_tnc()
     }
     *tx_bufptr++ = FEND;
     len++;
-    write(kisslink,tx_buffer,len);
+    (void)((write(kisslink,tx_buffer,len) == -1) ? 0 : 1);;
   }
 }
 
@@ -985,7 +1024,7 @@ static void framedata_to_queue(char *buffer,int len)
       if (c >= 32 && c <= 126)    // druckbare ASCII-Zeichen
           tmpstr[i] = c;
       else
-          tmpstr[i] = '.';        // Platzhalter für Nicht-ASCII
+          tmpstr[i] = '.';        // Platzhalter fï¿½r Nicht-ASCII
   }
   tmpstr[len] = '\0';
   printf("framedata_to_queue: len=%d, buffer=\"%s\"\n", len, tmpstr);
@@ -1139,11 +1178,11 @@ static void switchback()
 #ifdef DEBUG
 	printf ( "trying to switch tnc back to hostmode \n" ) ; 
 #endif
-        write ( kisslink, buf , strlen ( buf ) ) ; 
+        (void)((write ( kisslink, buf , strlen ( buf ) ) == -1) ? 0 : 1);
 	/* printf ( buf ) ; */
-      } ; 
-  exit_all() ; 
-  exit ( 0 ) ; 
+      } ;
+  exit_all() ;
+  exit ( 0 ) ;
 }
 
 static void sigterm()
@@ -1189,7 +1228,7 @@ void dotokiss(void)
 #ifdef DEBUG
 	printf ( "trying to switch tnc to kiss \n" ) ; 
 #endif
-        write ( kisslink, TTKISS , strlen ( TTKISS ) ) ; 
+        (void)((write ( kisslink, TTKISS , strlen ( TTKISS ) ) == -1) ? 0 : 1);
 	/* printf ( TTKISS ) ; */
       } ; 
   } ; 
@@ -1341,7 +1380,7 @@ int main(int argc,char *argv[])
     close(0);
     close(1);
     close(2);
-    chdir("/");
+    (void)((chdir("/") == -1) ? 0 : 1);
     setsid();
     signal(SIGPIPE, SIG_IGN);
 #endif    
@@ -1438,7 +1477,7 @@ int main(int argc,char *argv[])
     }
 
 /*&&&hb9xar: 10ms cycle gibt eine relativ hohe CPU Last. 
-             Daher auf 100ms erhöht.
+             Daher auf 100ms erhï¿½ht.
     timevalue.tv_usec = 10000; */
     timevalue.tv_usec = 100000;
     timevalue.tv_sec = 0;

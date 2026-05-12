@@ -57,11 +57,11 @@ int kisstype;
 int kiss_active;
 int axip_active;
 int fulldup_on_dama;
+char bluetooth_mac[MAXCHAR];
+int use_bluetooth;
 char tfkiss_conf_dir[MAXCHAR];
 char tfkiss_log_dir[MAXCHAR];
 char tfkiss_run_dir[MAXCHAR];
-char tfkiss_lock_dir[MAXCHAR];
-char tfkiss_lockfile[MAXCHAR];
 char tfkiss_errfile[MAXCHAR];
 char tfkiss_parafile[MAXCHAR];
 char tfkiss_procfile[MAXCHAR];
@@ -189,32 +189,32 @@ void save_para()
   if (parafd == -1) return;
   magic_nr = PARAFILE_MAGIC;
 
-  write(parafd,&magic_nr,PARAFILE_MAGICLEN);
-  write(parafd,&defESC,1);
-  write(parafd,myid,7);
-  write(parafd,&Ypar,1);
-  write(parafd,&Mpar,1);
-  write(parafd,&Rpar,1);
-  write(parafd,&Ppar,1);
-  write(parafd,&Wpar,1);
-  write(parafd,&Tpar,1);
-  write(parafd,&Zpar,1);
-  write(parafd,&Xpar,1);
-  write(parafd,&Apar,1);
-  write(parafd,&Epar,1);
-  write(parafd,&Opar,1);
-  write(parafd,&Npar,1);
-  write(parafd,&VCpar,1);
-  write(parafd,&Dpar,1);
-  write(parafd,&UIpar,1);
-  write(parafd,&stamp,1);
-  write(parafd,&xFpar,1);
-  write(parafd,&T2par,2);
-  write(parafd,&T3par,2);
-  write(parafd,&A3par,1);
-  write(parafd,&Fpar,2);
-  write(parafd,&Ipar,1);
-  write(parafd,&xTApar,1);
+  (void)((write(parafd,&magic_nr,PARAFILE_MAGICLEN) == -1) ? 0 : 1);
+  (void)((write(parafd,&defESC,1) == -1) ? 0 : 1);
+  (void)((write(parafd,myid,7) == -1) ? 0 : 1);
+  (void)((write(parafd,&Ypar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Mpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Rpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Ppar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Wpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Tpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Zpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Xpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Apar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Epar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Opar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Npar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&VCpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Dpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&UIpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&stamp,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&xFpar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&T2par,2) == -1) ? 0 : 1);
+  (void)((write(parafd,&T3par,2) == -1) ? 0 : 1);
+  (void)((write(parafd,&A3par,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&Fpar,2) == -1) ? 0 : 1);
+  (void)((write(parafd,&Ipar,1) == -1) ? 0 : 1);
+  (void)((write(parafd,&xTApar,1) == -1) ? 0 : 1);
   close(parafd);
 }
 
@@ -459,29 +459,16 @@ char str2[];
     }
     return(0);
   }
-  else if (strcmp(str1,"tfkiss_run_dir") == 0) {
-    strcpy(tfkiss_run_dir,str2);
-    tmp = strlen(tfkiss_run_dir);
-    if (tfkiss_run_dir[tmp-1] != '/') {
-      tfkiss_run_dir[tmp] = '/';
-      tfkiss_run_dir[tmp+1] = '\0';
-    }
-    return(0);
-  }
-  else if (strcmp(str1,"tfkiss_lock_dir") == 0) {
-    strcpy(tfkiss_lock_dir,str2);
-    tmp = strlen(tfkiss_lock_dir);
-    if (tfkiss_lock_dir[tmp-1] != '/') {
-      tfkiss_lock_dir[tmp] = '/';
-      tfkiss_lock_dir[tmp+1] = '\0';
-    }
-    return(0);
-  }
-  else if (strcmp(str1,"tfkiss_lockfile") == 0) {
-    strcpy(tfkiss_lockfile,str2);
-    return(0);
-  }
-  else if (strcmp(str1,"tfkiss_errfile") == 0) {
+   else if (strcmp(str1,"tfkiss_run_dir") == 0) {
+     strcpy(tfkiss_run_dir,str2);
+     tmp = strlen(tfkiss_run_dir);
+     if (tfkiss_run_dir[tmp-1] != '/') {
+       tfkiss_run_dir[tmp] = '/';
+       tfkiss_run_dir[tmp+1] = '\0';
+     }
+     return(0);
+   }
+   else if (strcmp(str1,"tfkiss_errfile") == 0) {
     strcpy(tfkiss_errfile,str2);
     return(0);
   }
@@ -565,20 +552,20 @@ int *unlock;
   strcpy(device,DEF_DEVICE);
   speed = DEF_SPEED;
   speedflag = DEF_SPEEDFLAG;
-  strcpy(tfkiss_conf_dir,DEF_CONF_DIR);
-  strcpy(tfkiss_log_dir,DEF_LOG_DIR);
-  strcpy(tfkiss_run_dir,DEF_RUN_DIR);
-  strcpy(tfkiss_lock_dir,DEF_LOCK_DIR);
-  strcpy(tfkiss_lockfile,DEF_LOCK_FILE);
-  strcpy(tfkiss_procfile,DEF_PROC_FILE);
-  strcpy(tfkiss_errfile,DEF_ERR_FILE);
+   strcpy(tfkiss_conf_dir,DEF_CONF_DIR);
+   strcpy(tfkiss_log_dir,DEF_LOG_DIR);
+   strcpy(tfkiss_run_dir,DEF_RUN_DIR);
+   strcpy(tfkiss_procfile,DEF_PROC_FILE);
+   strcpy(tfkiss_errfile,DEF_ERR_FILE);
   strcpy(tfkiss_parafile,DEF_PARA_FILE);
-  strcpy(tfkiss_axipconfig,DEF_AXIPCONFIG);
-  kisstype = KISS_NORMAL;
-  kiss_active = 1;
-  axip_active = 0;
-  fulldup_on_dama = DEF_FULLDUP_ON_DAMA;
-  tfkiss_socket[0] = '\0';
+   strcpy(tfkiss_axipconfig,DEF_AXIPCONFIG);
+   kisstype = KISS_NORMAL;
+   kiss_active = 1;
+   axip_active = 0;
+   fulldup_on_dama = DEF_FULLDUP_ON_DAMA;
+   strcpy(bluetooth_mac,DEF_BLUETOOTH_MAC);
+   use_bluetooth = 0;
+   tfkiss_socket[0] = '\0';
 #ifdef USE_AXIP
   axip_config_init();
 #endif
@@ -618,12 +605,13 @@ int *unlock;
   scanned = 1;
   *unlock = 0;
   reset = 0;
+  int explicit_device = 0;
   while ((scanned < argc) && (!wrong_usage)) {
     if (strcmp(argv[scanned],"-i") == 0) {
       scanned++;
       if (scanned < argc) {
         strcpy(tfkiss_initfile,argv[scanned]);
-	explicit_ini=1;
+	      explicit_ini=1;
       }
       else wrong_usage = 1;
     }
@@ -633,6 +621,83 @@ int *unlock;
         strcpy(tfkiss_socket,argv[scanned]);
         use_socket = 1;
         if (use_terminal) wrong_usage = 1;
+      }
+      else wrong_usage = 1;
+    }
+    else if (strcmp(argv[scanned],"-d") == 0) {
+      scanned++;
+      if (scanned < argc) {
+        strcpy(device,argv[scanned]);
+        explicit_device = 1;
+      }
+      else wrong_usage = 1;
+    }
+    else if (strcmp(argv[scanned],"-b") == 0) {
+      scanned++;
+      if (scanned < argc) {
+        speed = atoi(argv[scanned]);
+        speedflag = 0;
+        switch (speed) {
+        case 150:
+          speed = B150;
+          break;
+        case 300:
+          speed = B300;
+          break;
+        case 600:
+          speed = B600;
+          break;
+        case 1200:
+          speed = B1200;
+          break;
+        case 2400:
+          speed = B2400;
+          break;
+        case 4800:
+          speed = B4800;
+          break;
+        case 9600:
+          speed = B9600;
+          break;
+        case 19200:
+          speed = B19200;
+          break;
+        case 38400:
+          speed = B38400;
+          break;
+#ifdef USE_HIBAUD
+        case 57600:
+          speed = B38400;
+          speedflag = ASYNC_SPD_HI;
+          break;
+        case 115200:
+          speed = B38400;
+          speedflag = ASYNC_SPD_VHI;
+          break;
+#endif
+        default:
+          wrong_usage = 1;
+          break;
+        }
+      }
+      else wrong_usage = 1;
+    }
+    else if (strcmp(argv[scanned],"-bt") == 0) {
+      scanned++;
+      if (scanned < argc) {
+        strcpy(bluetooth_mac,argv[scanned]);
+        use_bluetooth = 1;
+        explicit_device = 1;
+      }
+      else wrong_usage = 1;
+    }
+    else if (strcmp(argv[scanned],"-k") == 0) {
+      scanned++;
+      if (scanned < argc) {
+        kisstype = atoi(argv[scanned]);
+        if (kisstype > KISS_RMNC || kisstype < KISS_NORMAL) {
+          wrong_usage = 1;
+        }
       }
       else wrong_usage = 1;
     }
@@ -649,21 +714,61 @@ int *unlock;
       use_terminal = 1;
       if (use_socket) wrong_usage = 1;
     }
+    else if (strcmp(argv[scanned],"-h") == 0 || strcmp(argv[scanned],"--help") == 0) {
+      printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-x] [-h|--help]\n");
+      printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
+      printf("        [-l <log-dir>] [-r <run-dir>]\n");
+      printf("        [-e <errfile>] [-p <parafile>] [-a <axipconfig>]\n");
+      printf("        -i <init-file>  specify initialization file\n");
+      printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
+      printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
+      printf("        -b <speed>  specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
+      printf("        -k <kisstype>  specify KISS type (0=normal,1=rmnc)\n");
+      printf("        -c <conf-dir>  specify configuration directory\n");
+      printf("        -l <log-dir>  specify log directory\n");
+      printf("        -r <run-dir>  specify run directory\n");
+      printf("        -e <errfile>  specify error file name\n");
+      printf("        -p <parafile>  specify parameter file name\n");
+      printf("        -a <axipconfig>  specify AXIP config file name\n");
+      printf("        -bt <bt-mac>  specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
+      printf("        -r  ignore and delete all parameters stored in tfkiss.para file\n");
+      printf("        -t  startup in console-mode\n");
+      printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss\n");
+      printf("        -h, --help  show this help message\n");
+      exit(0);
+    }
     else {
       wrong_usage = 1;
     }
     scanned++;
   }
   if (wrong_usage) {
-    printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-u] [-r] [-t] [-x]\n");
-    printf("        -u  ignore an existing lockfile for the KISS device \n");
-    printf("        -r  ignore and delete all parameter stored in tfkiss.para file \n");
-    printf("        -t  startup in console-mode \n");
-    printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss \n");
-    printf ( "\n" ) ;
+    printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-x] [-h|--help]\n");
+    printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
+    printf("        [-l <log-dir>] [-r <run-dir>] [-e <errfile>] [-p <parafile>] [-a <axipconfig>] [-bt <bt-mac>]\n");
+    printf("        -i <init-file>  specify initialization file\n");
+    printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
+    printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
+    printf("        -b <speed>  specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
+    printf("        -k <kisstype>  specify KISS type (0=normal,1=rmnc)\n");
+    printf("        -c <conf-dir>  specify configuration directory\n");
+    printf("        -l <log-dir>  specify log directory\n");
+    printf("        -r <run-dir>  specify run directory\n");
+    printf("        -e <errfile>  specify error file name\n");
+    printf("        -p <parafile>  specify parameter file name\n");
+    printf("        -a <axipconfig>  specify AXIP config file name\n");
+    printf("        -bt <bt-mac>  specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
+    printf("        -r  ignore and delete all parameters stored in tfkiss.para file\n");
+    printf("        -t  startup in console-mode\n");
+    printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss\n");
+    printf("        -h, --help  show this help message\n");
     return(1);
   }
-
+ 
+  if (explicit_device) {
+    strcpy(tfkiss_initfile,"");
+    explicit_ini = 0;
+  }
   if (explicit_ini ==1) {
     if (!(init_file_fp = fopen(tfkiss_initfile,"r"))) {
       printf("Error: explicit configuration file \"%s\" not found. \n",
@@ -732,10 +837,9 @@ int *unlock;
   }
   else {
 
-    add_dir(tfkiss_lock_dir,tfkiss_lockfile);
-    add_dir(tfkiss_log_dir,tfkiss_errfile);
-    add_dir(tfkiss_conf_dir,tfkiss_parafile);
-    add_dir(tfkiss_run_dir,tfkiss_procfile);
+     add_dir(tfkiss_log_dir,tfkiss_errfile);
+     add_dir(tfkiss_conf_dir,tfkiss_parafile);
+     add_dir(tfkiss_run_dir,tfkiss_procfile);
     if (use_socket != 2)
       add_dir(tfkiss_run_dir,tfkiss_socket);
 

@@ -6,6 +6,7 @@ name = "tmp-env";
 buildInputs = [
   fpm
 	fakeroot
+  bluez
 ];
 
 SOURCE_DATE_EPOCH = 315532800;

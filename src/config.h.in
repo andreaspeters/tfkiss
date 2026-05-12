@@ -128,3 +128,5 @@
 
 /* define TFKISS_INI_DIR */
 #undef DEF_INI_DIR
+
+#define USE_BLUETOOTH 1

@@ -11,6 +11,11 @@ The original README content follows below.
 
 ## Changes
 
+### v2.0.0
+
+- ADD: Bluetooth support (`-bt <MAC ADDR>`)
+- ADD: All parameters from the ini file can be used as commandline parameter. For more infos, use `--help`
+
 ### v1.3.0
 
 - ADD: Show APRS UI Frames in Monitor Channel.
