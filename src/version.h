@@ -44,4 +44,4 @@
 #define SIG8 "        netbsd-porting copyright (c) 1999 by Berndt Josef Wulf, VK5ABN\015\012"
 #define SIG9 "                Copyright (c) 2026 by Andreas Peters, DC6AP\015\012"
 #define SIG6 "\015\012"
-#define SIG_D "                         version 2.0.0 - 12.05.2025 \015\012"
+#define SIG_D "                         version 2.0.0 - 12.05.2026 \015\012"
