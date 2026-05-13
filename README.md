@@ -11,6 +11,10 @@ The original README content follows below.
 
 ## Changes
 
+### master
+
+- ADD: run tfkiss in foreground (`-f`)
+
 ### v2.0.0
 
 - ADD: Bluetooth support (`-bt <MAC ADDR>`)

@@ -36,21 +36,21 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
- #include <sys/un.h>
- #include <netdb.h>
- #include "config.h"
+#include <sys/un.h>
+#include <netdb.h>
+#include "config.h"
  
- #ifdef HAVE_ERRNO_H
- #include <errno.h>
- #endif
+#ifdef HAVE_ERRNO_H
+#include <errno.h>
+#endif
 
- #ifdef USE_BLUETOOTH
- #include <sys/socket.h>
- #include <bluetooth/bluetooth.h>
- #include <bluetooth/rfcomm.h>
- #endif
+#ifdef USE_BLUETOOTH
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/rfcomm.h>
+#endif
 
- #ifdef USE_HIBAUD
+#ifdef USE_HIBAUD
 #include <sys/ioctl.h>
 #include <linux/fs.h>
 #include <linux/tty.h>
@@ -136,6 +136,7 @@ extern char device[MAXCHAR];
 extern int speed;
 extern int speedflag;
 int use_socket;
+extern int use_foreground;
 static int terminated;
 static int kisslink;
 static int lock;
@@ -1358,10 +1359,10 @@ int main(int argc,char *argv[])
     printf(SIG_D);
     printf(SIG6);
 
-#ifndef DEBUG    
-    if (fork() != 0)
-      exit(0);
-#endif
+ #ifndef DEBUG    
+     if (!use_foreground && fork() != 0)
+       exit(0);
+ #endif
 
     if (init_proc()) {
       free(buffers);
@@ -1376,15 +1377,17 @@ int main(int argc,char *argv[])
     printf("Init ok\n");
 #endif          
 
-#ifndef DEBUG    
-    close(0);
-    close(1);
-    close(2);
-    (void)((chdir("/") == -1) ? 0 : 1);
-    setsid();
-    signal(SIGPIPE, SIG_IGN);
-#endif    
-  }
+ #ifndef DEBUG    
+     if (!use_foreground) {
+       close(0);
+       close(1);
+       close(2);
+       (void)((chdir("/") == -1) ? 0 : 1);
+       setsid();
+       signal(SIGPIPE, SIG_IGN);
+     }
+ #endif    
+   }
   else {
 
     if (init_proc()) {

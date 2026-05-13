@@ -68,6 +68,7 @@ char tfkiss_procfile[MAXCHAR];
 char tfkiss_axipconfig[MAXCHAR];
 
 int use_terminal;
+int use_foreground;
 
 /* magic number to verify parameter file (type: unsigned short, 2 byte) */
 #define PARAFILE_MAGIC 0x5E5E
@@ -552,20 +553,20 @@ int *unlock;
   strcpy(device,DEF_DEVICE);
   speed = DEF_SPEED;
   speedflag = DEF_SPEEDFLAG;
-   strcpy(tfkiss_conf_dir,DEF_CONF_DIR);
-   strcpy(tfkiss_log_dir,DEF_LOG_DIR);
-   strcpy(tfkiss_run_dir,DEF_RUN_DIR);
-   strcpy(tfkiss_procfile,DEF_PROC_FILE);
-   strcpy(tfkiss_errfile,DEF_ERR_FILE);
+  strcpy(tfkiss_conf_dir,DEF_CONF_DIR);
+  strcpy(tfkiss_log_dir,DEF_LOG_DIR);
+  strcpy(tfkiss_run_dir,DEF_RUN_DIR);
+  strcpy(tfkiss_procfile,DEF_PROC_FILE);
+  strcpy(tfkiss_errfile,DEF_ERR_FILE);
   strcpy(tfkiss_parafile,DEF_PARA_FILE);
-   strcpy(tfkiss_axipconfig,DEF_AXIPCONFIG);
-   kisstype = KISS_NORMAL;
-   kiss_active = 1;
-   axip_active = 0;
-   fulldup_on_dama = DEF_FULLDUP_ON_DAMA;
-   strcpy(bluetooth_mac,DEF_BLUETOOTH_MAC);
-   use_bluetooth = 0;
-   tfkiss_socket[0] = '\0';
+  strcpy(tfkiss_axipconfig,DEF_AXIPCONFIG);
+  kisstype = KISS_NORMAL;
+  kiss_active = 1;
+  axip_active = 0;
+  fulldup_on_dama = DEF_FULLDUP_ON_DAMA;
+  strcpy(bluetooth_mac,DEF_BLUETOOTH_MAC);
+  use_bluetooth = 0;
+  tfkiss_socket[0] = '\0';
 #ifdef USE_AXIP
   axip_config_init();
 #endif
@@ -601,6 +602,7 @@ int *unlock;
   strcpy(tfkiss_initfile,INIT_FILE);
   use_socket = 0;
   use_terminal = 0;
+  use_foreground = 0;
   wrong_usage = 0;
   scanned = 1;
   *unlock = 0;
@@ -714,27 +716,31 @@ int *unlock;
       use_terminal = 1;
       if (use_socket) wrong_usage = 1;
     }
+    else if (strcmp(argv[scanned],"-f") == 0) {
+      use_foreground = 1;
+    }
     else if (strcmp(argv[scanned],"-h") == 0 || strcmp(argv[scanned],"--help") == 0) {
-      printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-x] [-h|--help]\n");
+      printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-f] [-x] [-h|--help]\n");
       printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
       printf("        [-l <log-dir>] [-r <run-dir>]\n");
       printf("        [-e <errfile>] [-p <parafile>] [-a <axipconfig>]\n");
-      printf("        -i <init-file>  specify initialization file\n");
-      printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
-      printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
-      printf("        -b <speed>  specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
-      printf("        -k <kisstype>  specify KISS type (0=normal,1=rmnc)\n");
-      printf("        -c <conf-dir>  specify configuration directory\n");
-      printf("        -l <log-dir>  specify log directory\n");
-      printf("        -r <run-dir>  specify run directory\n");
-      printf("        -e <errfile>  specify error file name\n");
-      printf("        -p <parafile>  specify parameter file name\n");
-      printf("        -a <axipconfig>  specify AXIP config file name\n");
-      printf("        -bt <bt-mac>  specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
-      printf("        -r  ignore and delete all parameters stored in tfkiss.para file\n");
-      printf("        -t  startup in console-mode\n");
-      printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss\n");
-      printf("        -h, --help  show this help message\n");
+      printf("        [-i <init-file>]      specify initialization file\n");
+      printf("        [-s <tfkiss-socket>]  enable socket mode with specified socket path\n");
+      printf("        [-d <device>]         specify KISS device (e.g. /dev/cua0)\n");
+      printf("        [-b <speed>]          specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
+      printf("        [-k <kisstype>]       specify KISS type (0=normal,1=rmnc)\n");
+      printf("        [-c <conf-dir>]       specify configuration directory\n");
+      printf("        [-l <log-dir>]        specify log directory\n");
+      printf("        [-r <run-dir>]        specify run directory\n");
+      printf("        [-e <errfile>]        specify error file name\n");
+      printf("        [-p <parafile>]       specify parameter file name\n");
+      printf("        [-a <axipconfig>]     specify AXIP config file name\n");
+      printf("        [-bt <bt-mac>]        specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
+      printf("        [-r]                  ignore and delete all parameters stored in tfkiss.para file\n");
+      printf("        [-t]                  startup in console-mode\n");
+      printf("        [-f]                  run in foreground mode\n");
+      printf("        [-x]                  switch tnc2 with thefirm from terminal-mode to kiss\n");
+      printf("        [-h, --help]          show this help message\n");
       exit(0);
     }
     else {
@@ -743,26 +749,26 @@ int *unlock;
     scanned++;
   }
   if (wrong_usage) {
-    printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-x] [-h|--help]\n");
-    printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
-    printf("        [-l <log-dir>] [-r <run-dir>] [-e <errfile>] [-p <parafile>] [-a <axipconfig>] [-bt <bt-mac>]\n");
-    printf("        -i <init-file>  specify initialization file\n");
-    printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
-    printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
-    printf("        -b <speed>  specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
-    printf("        -k <kisstype>  specify KISS type (0=normal,1=rmnc)\n");
-    printf("        -c <conf-dir>  specify configuration directory\n");
-    printf("        -l <log-dir>  specify log directory\n");
-    printf("        -r <run-dir>  specify run directory\n");
-    printf("        -e <errfile>  specify error file name\n");
-    printf("        -p <parafile>  specify parameter file name\n");
-    printf("        -a <axipconfig>  specify AXIP config file name\n");
-    printf("        -bt <bt-mac>  specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
-    printf("        -r  ignore and delete all parameters stored in tfkiss.para file\n");
-    printf("        -t  startup in console-mode\n");
-    printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss\n");
-    printf("        -h, --help  show this help message\n");
-    return(1);
+   printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-f] [-x] [-h|--help]\n");
+   printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
+   printf("        [-l <log-dir>] [-r <run-dir>] [-e <errfile>] [-p <parafile>] [-a <axipconfig>] [-bt <bt-mac>]\n");
+   printf("        -i <init-file>  specify initialization file\n");
+   printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
+   printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
+   printf("        -b <speed>  specify baud rate (150,300,600,1200,2400,4800,9600,19200,38400)\n");
+   printf("        -k <kisstype>  specify KISS type (0=normal,1=rmnc)\n");
+   printf("        -c <conf-dir>  specify configuration directory\n");
+   printf("        -l <log-dir>  specify log directory\n");
+   printf("        -r <run-dir>  specify run directory\n");
+   printf("        -e <errfile>  specify error file name\n");
+   printf("        -p <parafile>  specify parameter file name\n");
+   printf("        -a <axipconfig>  specify AXIP config file name\n");
+   printf("        -bt <bt-mac>  specify Bluetooth RFCOMM device (e.g. 00:11:22:33:44:55)\n");
+   printf("        -r  ignore and delete all parameters stored in tfkiss.para file\n");
+   printf("        -t  startup in console-mode\n");
+   printf("        -x  switch tnc2 with thefirm from terminal-mode to kiss\n");
+   printf("        -h, --help  show this help message\n");
+   return(1);
   }
  
   if (explicit_device) {
