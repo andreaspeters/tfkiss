@@ -5,7 +5,17 @@ run on 64-bit systems. The original tfkiss versions has some issues with
 sizes of datatypes (like pointers) that are differend on 64-bit systems,
 causing SEGVs at runtime.
 
-For building information, please check the file README.hb9xar
+Build with CMake:
+
+```sh
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+sudo cmake --install build
+```
+
+The optional AXIP, XPID, FLEXNET and Linux high-baud features are described
+in `INSTALL`.
 
 The original README content follows below.
 
@@ -32,8 +42,8 @@ alas.* files in the doc directory for more detailed information on
 copyright issues.
 
 tfkiss-1.1.0 now supports NetBSD, Linux and Solaris. During the porting 
-process, a few bugs were identified and fixed. In addition, the autoconf
-utility was added automating the configuration and building process.
+process, a few bugs were identified and fixed. A build configuration utility
+was also added to automate the original configuration and building process.
 Refer to the "CHANGES" file for more detailed information. 
 
 The source code for tfkiss-1.1.0 can be found on 

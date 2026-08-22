@@ -1,0 +1,19 @@
+set(_configured_conf_dir "@TFKISS_INSTALL_CONFDIR@")
+if(IS_ABSOLUTE "${_configured_conf_dir}")
+    set(_install_conf_dir "${_configured_conf_dir}")
+else()
+    set(_install_conf_dir "${CMAKE_INSTALL_PREFIX}/${_configured_conf_dir}")
+endif()
+set(_physical_conf_dir "$ENV{DESTDIR}${_install_conf_dir}")
+
+if(EXISTS "${_physical_conf_dir}/tfkiss.ini")
+    message(WARNING
+        "An existing tfkiss.ini was found in ${_physical_conf_dir}; "
+        "the example configuration files were not overwritten.")
+else()
+    file(INSTALL
+        DESTINATION "${_install_conf_dir}"
+        TYPE FILE
+        FILES "@TFKISS_GENERATED_INI@" "@TFKISS_AXIP_CONFIG@"
+    )
+endif()

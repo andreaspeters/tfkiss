@@ -51,14 +51,15 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# autoconf
-config.log
-config.status
-config.guess
-config.sub
-Makefile
-configure
-autom4te.cache
+# CMake out-of-tree builds
+/build/
+/build-*/
+/cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+install_manifest.txt
 
 # executables
 src/tfkiss

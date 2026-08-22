@@ -1,16 +1,22 @@
 
-requires: ncurses-devel
+requires: a C17 compiler, CMake, and BlueZ development headers on Linux
 
-bootstrap:
-$ ./autogen.sh
-$ ./configure --enable-hibaud --enable-xpid --enable-axip
+configure:
+$ cmake -S . -B build \
+    -DTFKISS_ENABLE_HIBAUD=ON \
+    -DTFKISS_ENABLE_XPID=ON \
+    -DTFKISS_ENABLE_AXIP=ON
 
 build:
-$ make clean && make
+$ cmake --build build
+$ ctest --test-dir build --output-on-failure
 
 debug build:
-$ CFLAGS='-ggdb' ./configure --enable-hibaud --enable-xpid --enable-axip
-$ make clean && make
+$ cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug \
+    -DTFKISS_ENABLE_HIBAUD=ON \
+    -DTFKISS_ENABLE_XPID=ON \
+    -DTFKISS_ENABLE_AXIP=ON
+$ cmake --build build-debug
 
 
 73 de Thomas, HB9XAR
@@ -19,5 +25,5 @@ $ make clean && make
 History
 -------
 2020-12-13 hb9xar	- imported tfkiss-1.2.4
-			- configure: pass along Env CFLAGS into Makefile
+			- legacy build: pass along environment CFLAGS
 			- applied various sizing fixes for 64bit systems
