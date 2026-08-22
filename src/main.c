@@ -457,8 +457,11 @@ static int init_kisslink(char *serstr,int speed, int speedflag,int unlock)
   cfsetospeed(&wrk_termios,speed);
 #ifdef USE_HIBAUD
   if (speed == B38400 && !is_bluetooth) {
-    if (ioctl(kisslink,TIOCGSERIAL, &ser_io) < 0) {
-      printf("Error: can't get kisslink info\n");
+    ser_io.flags &= ~ASYNC_SPD_MASK;
+    ser_io.flags |= speedflag;
+    if (ioctl(kisslink,TIOCSSERIAL, &ser_io) < 0) {
+      printf("Error: can't set kisslink info\n");
+      tcsetattr(kisslink,TCSADRAIN,&org_termios);
       close(kisslink);
       return(1);
     }

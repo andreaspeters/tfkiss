@@ -33,7 +33,7 @@
 *                   defDAp entfernt.                                       *
 *                                                                          *
 *                   DB2OS,  27.08.94                                       *
-*                   Variablen loops und rps fÅr RPS-Anzeige                *
+*                   Variablen loops und rps fÔøΩr RPS-Anzeige                *
 *                   alias[n], defID, defVp, defHp, defHmp entfernt.        *
 *                                                                          *
 *                   DL8HBS, 19.10.94                                       *
@@ -92,6 +92,8 @@ extern short       bgetvl();
 extern short       bgetid();
 
 extern void        send_kisscmd();
+extern void l2stma(STENTRY stbl[]);
+extern void l2tolx(unsigned short msg);
 
 /*                                                             Variable   */
 /**************************************************************************/
@@ -206,9 +208,9 @@ extern MBHEAD     *mifmbp;
 extern LHEAD       statml;
 extern LHEAD       smonfl;
 extern LHEAD       chnlml[];
-extern unsigned short    chnlbc[];  /* FEF fÅr Flow-Control */
+extern unsigned short    chnlbc[];  /* FEF fÔøΩr Flow-Control */
 
-extern unsigned short    loops;     /* HauptschleifendurchlÑufe */
+extern unsigned short    loops;     /* HauptschleifendurchlÔøΩufe */
 extern unsigned short    rps;       /* Rounds per Second */
 #ifdef USE_XPID
 extern char        UItxPID;

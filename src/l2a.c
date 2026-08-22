@@ -108,56 +108,56 @@
 *                   l2timr(): IPOLL bei DAMA ist sinnlos, gesperrt         *
 *                                                                          *
 *                   DG2FEF: 18.06.94                                       *
-*                   l2rx(): DAMA-Poll Reaktion berarbeitet. Nur noch wenn *
+*                   l2rx(): DAMA-Poll Reaktion ï¿½berarbeitet. Nur noch wenn *
 *                           gepollt auf DAMA schalten, Slottime auf 50  ms *
 *                           setzen und alten Wert merken. Dann srxdNR()    *
-*                           aufrufen und die noch unbest„tigten Frames aus *
+*                           aufrufen und die noch unbestï¿½tigten Frames aus *
 *                           der letzten Runde zum Senden freigeben         *
 *                           Wenn UA+ mit DAMA-Bit kommt, sendok = 1        *
-*                   l2tx(): L2FDPOLL heiát jetzt L2FJSENT, wird in l2rx()  *
+*                   l2tx(): L2FDPOLL heiï¿½t jetzt L2FJSENT, wird in l2rx()  *
 *                           gebraucht.                                     *
 *                   l2timr(): Keine Timerreaktionen mehr bei DAMA          *
-*                             L2FDPOLL-L”schen entfernt                    *
+*                             L2FDPOLL-Lï¿½schen entfernt                    *
 *                                                                          *
 *                   DG2FEF, 18.07.94                                       *
 *                   l2rx(): Bei Umschalten auf DAMA werden jetzt gar keine *
-*                           Parameter mehr ver„ndert. Durch einen Patch im *
+*                           Parameter mehr verï¿½ndert. Durch einen Patch im *
 *                           L1 geht der TNC mit sendok = 1 ohne Warten     *
 *                           und ohne DCD-Beachtung auf Sendung.            *
-*                           šberflssigen Code in der Suchroutine fr den  *
+*                           ï¿½berflï¿½ssigen Code in der Suchroutine fï¿½r den  *
 *                           richtigen Linkblock entfernt.                  *
 *                           tol3sw() entfernt, es gibt eh keinen l3 mehr.  *
 *                           I-Frame Behandlung angepasst.                  *
 *                           UI-Behandlung nach weiter hinten verlegt.      *
-*                           Auch Kan„le, die ein anderes Rufzeichen als    *
+*                           Auch Kanï¿½le, die ein anderes Rufzeichen als    *
 *                           das auf Kanal 0 haben, werden jetzt beachtet.  *
-*                           L2FPOLL eingefhrt: Gesetzt, wenn Link unter   *
+*                           L2FPOLL eingefï¿½hrt: Gesetzt, wenn Link unter   *
 *                           DAMA gepollt wird.                             *
 *                           Der DAMA-Slave verwirft nun alle Frames, die   *
 *                           nicht vom Master an ihn gesendet werden.       *
 *                                                                          *
-*                   l2tx(): Zus„tzlich L2FMAXF1 und L2FRETRY eingefhrt,   *
-*                           fr Framesammler-Untersttzung unter DAMA      *
+*                   l2tx(): Zusï¿½tzlich L2FMAXF1 und L2FRETRY eingefï¿½hrt,   *
+*                           fï¿½r Framesammler-Unterstï¿½tzung unter DAMA      *
 *                                                                          *
-*                   l2timr(): T1 wieder zugelassen fr alle Links im Auf-  *
+*                   l2timr(): T1 wieder zugelassen fï¿½r alle Links im Auf-  *
 *                             bzw. Abbau. T1,T2 gestoppt, wenn DCD on.     *
-*                             Ablaufkriterium fr T2 unter DAMA ist jetzt  *
+*                             Ablaufkriterium fï¿½r T2 unter DAMA ist jetzt  *
 *                             der Master-Poll, damit I-Frames auf alle     *
-*                             F„lle best„tigt werden k”nnen.               *
+*                             Fï¿½lle bestï¿½tigt werden kï¿½nnen.               *
 *                             Aufruf von sdipoll() in State-Machine ver-   *
 *                             lagert.                                      *
 *                             DAMA-Relevante Flags werden jetzt hier ge-   *
-*                             l”scht, nicht mehr in l2rest();              *
+*                             lï¿½scht, nicht mehr in l2rest();              *
 *                                                                          *
 *                   DG2FEF 13.08.94                                        *
 *                   l2rx(): Framesammler nach OE1HHC/OE3GMW eingebaut      *
 *                           und verbessert (Datensicherheit).              *
-*                           Suchroutine nach dem n„chsten freien           *
-*                           Linkblock gekrzt. Es wird nun nur noch        *
+*                           Suchroutine nach dem nï¿½chsten freien           *
+*                           Linkblock gekï¿½rzt. Es wird nun nur noch        *
 *                           abgefragt, ob ein freier Linkblock  mit dem    *
 *                           entsprechenden Quellcall vorhanden ist.        *
-*                           Eine nderung in inilbl() sorgt dafr, daá die *
-*                           Linkbl”cke stets mit dem in myid[] gespeicher- *
+*                           Eine ï¿½nderung in inilbl() sorgt dafï¿½r, daï¿½ die *
+*                           Linkblï¿½cke stets mit dem in myid[] gespeicher- *
 *                           ten Call initialisiert werden.                 *
 *                           `damati` fest auf 255 Sekunden, Bpar entfallen.*
 *                                                                          *
@@ -168,23 +168,23 @@
 *                   DG2FEF/DB2OS 22.08.94                                  *
 *                   l2rx(): Die fehlende Abfrage auf L2CNONRM konnte bei   *
 *                           DAMA zu einem FRMR beim Empfang eines DISC     *
-*                           fhren..                                       *
+*                           fï¿½hren..                                       *
 *                                                                          *
 *                   DB2OS  29.08.94                                        *
 *                   l2tx(), l2rest(), l2timr():                            *
 *                   Modifikation zur Geschwindigkeitssteigerung nach       *
-*                   DL1HAZ aus TheNetNode bernommen.                      *
+*                   DL1HAZ aus TheNetNode ï¿½bernommen.                      *
 *                                                                          *
 *                   DB2OS  08.09.94                                        *
 *                   l2tx(), l2rest(), l2timr():                            *
 *                   Modifikation zur Geschwindigkeitssteigerung noch       *
-*                   einmal berarbeitet bzw. berflssige Abfrage nach     *
+*                   einmal ï¿½berarbeitet bzw. ï¿½berflï¿½ssige Abfrage nach     *
 *                   (lnkpoi < &lnktbl[LINKNMBR]) entfernt..                *
 *                                                                          *
 *                   DG2FEF/DB2OS  19.09.94                                 *
 *                   Time T3 wieder aktiviert, damit es bei "abgefaulten"   *
-*                   DAMA Links (speziell wenn noch ein weiteres QSO l„uft  *
-*                   keinen H„nger gibt..                                   *
+*                   DAMA Links (speziell wenn noch ein weiteres QSO lï¿½uft  *
+*                   keinen Hï¿½nger gibt..                                   *
 *                                                                          *
 *                   DL4YBG 06.11.94                                        *
 *                   PID-Auswertung von empfangenen Frames, wenn            *
@@ -221,8 +221,8 @@ extern void i2tolx();
 extern void inilnk();
 extern BOOLEAN iscd();
 extern void kicktx();
-extern void l2stma();
-extern void l2tolx();
+extern void l2stma(STENTRY stbl[]);
+extern void l2tolx(unsigned short msg);
 extern void mclrlk();
 extern void reslnk();
 extern void sdfrmr();
@@ -351,7 +351,7 @@ void l2tx()
     }
 
     if (!nmblks || !damati)         /* letzter Link oder Timerablauf  */
-    {                               /* Alle DAMA-Flags l”schen        */
+    {                               /* Alle DAMA-Flags lï¿½schen        */
       for (n = 0, lnkpoi = lnktbl; n < LINKNMBR; ++n, ++lnkpoi)
         if (lnkpoi->state) lnkpoi->flag &= ~L2FDAMA;
           damaok = 0;               /* DAMA Modus ausschalten         */
@@ -406,7 +406,7 @@ void l2rx()
     static LNKBLK     *lblkp;        /* Linkblockpointer lokal            */
     static unsigned short    i;            /* FEF Framesammler Kontrollflag     */
 
-    raus = NO;                /* FEF Mindestens einmal mssen wir schon.. */
+    raus = NO;                /* FEF Mindestens einmal mï¿½ssen wir schon.. */
 
     while (   !raus          /* FEF solange wir nicht an Frames ersticken */
            && (fbp = (MBHEAD *)rxfl.head) != (MBHEAD *)&rxfl) 
@@ -474,11 +474,11 @@ void l2rx()
             lnkpoi = lblkp;                  /* Link, dann diesen nehmen  */
           else
             {
-             if (tome || istome(rxfhdr))     /* Kein freier Kanal mehr fr*/
-               if (rxfPF && rxfCR)           /* QSO aber Antwort erwnscht*/
+             if (tome || istome(rxfhdr))     /* Kein freier Kanal mehr fï¿½r*/
+               if (rxfPF && rxfCR)           /* QSO aber Antwort erwï¿½nscht*/
                 {
                  xdm();                      /* dann DM- senden           */
-                 if (rxfctl == L2CSABM)      /* wenn SABM, zus„tzlich Msg */
+                 if (rxfctl == L2CSABM)      /* wenn SABM, zusï¿½tzlich Msg */
                    l2tolx(L2MBUSYT);         /* ans Terminal              */
                 }
 
@@ -501,10 +501,10 @@ void l2rx()
         /* DAMA Modus einschalten und Sendung freigeben nach DCD-Abfall.  */
         /* FEF Sendung nur freigeben, wenn auch gepollt. DCD wird nicht   */
         /* mehr abgefragt.                                                */
-        /* FEF Ausserdem berprfen, ob noch Frames unbest„tigt ausstehen */
+        /* FEF Ausserdem ï¿½berprï¿½fen, ob noch Frames unbestï¿½tigt ausstehen */
         /* Wenn ja, V(S) resetten, ++lnkpoi->retries                      */
         /* Wenn inaktiver Link gepollt wurde, Sender trotzdem freigeben   */
-        /* fr UA- oder DM-                                               */
+        /* fï¿½r UA- oder DM-                                               */
 
         if (!(rxfhdr[L2ILEN-1] & L2CDAMA))             /* FEF DAMA-Frame? */
          {
@@ -520,9 +520,9 @@ void l2rx()
             sendok = 1;                             /* Sender freigeben   */
             lnkpoi->flag |= L2FPOLL;                /* Link wurde gepollt */
             if (l2state)                            /* aktiver Link ?     */
-             if (   (rxfctl & L2CNONRM) != 0x03     /* Frame enth„lt N(R) */
+             if (   (rxfctl & L2CNONRM) != 0x03     /* Frame enthï¿½lt N(R) */
                  && !(lnkpoi->flag & L2FJSENT)      /* wenn Flag stimmt   */
-                 && srxdNR() == YES           /* und gltiger Z„hlerstand */
+                 && srxdNR() == YES           /* und gï¿½ltiger Zï¿½hlerstand */
                  && lnkpoi->VS != lnkpoi->lrxdNR    /* was zu senden da?  */
                 )
                {
@@ -531,18 +531,18 @@ void l2rx()
                    lnkpoi->flag |= L2FMAXF1;    /* Maxframe = 1           */
                    lnkpoi->oldVS = lnkpoi->VS;  /* V(S) retten            */
                   }
-                ++lnkpoi->tries;                /* Retryz„hler erh”hen    */
-                lnkpoi->VS = lnkpoi->lrxdNR;    /* beim n„chsten Aufruf   */
+                ++lnkpoi->tries;                /* Retryzï¿½hler erhï¿½hen    */
+                lnkpoi->VS = lnkpoi->lrxdNR;    /* beim nï¿½chsten Aufruf   */
                }                                /* von l2tx() geht's raus */
            }
          }
 
         if (rxfctl == L2CUI)                 /* Falls UI-Frame ...        */
           {
-            if (rxfPF && rxfCR)              /* und Antwort erwnscht ... */
+            if (rxfPF && rxfCR)              /* und Antwort erwï¿½nscht ... */
               xdm();                         /* dann DM- senden ...       */
             dealmb(fbp);                     /* Frame wegwerfen ...       */
-            continue;                        /* und zum n„chsten Frame.   */
+            continue;                        /* und zum nï¿½chsten Frame.   */
           }
         else
         if (!(rxfctl & L2CNOIM))        /* I-Frame ?                      */
@@ -584,7 +584,7 @@ void l2rx()
                           l2tolx(L2MPIDCH);
                         }
 #endif
-                        relink(fbp,lnkpoi->rcvdil.tail); /*in Liste h„ngen*/
+                        relink(fbp,lnkpoi->rcvdil.tail); /*in Liste hï¿½ngen*/
                         ++lnkpoi->rcvd;
 
                         lnkpoi->flag |= L2FIRCVD; /* FEF */
@@ -592,7 +592,7 @@ void l2rx()
                         if (lnkpoi->colled)     /* FEF ist der Sammler an */
                           {
                             while (lnkpoi->colled) /* Alle Frames aus dem */
-                              {                    /* Sammler umh„ngen    */
+                              {                    /* Sammler umhï¿½ngen    */
                                 relink(tfunlink(lnkpoi->collil.head),
                                               lnkpoi->rcvdil.tail);
                                 ++lnkpoi->rcvd;
@@ -606,13 +606,13 @@ void l2rx()
                     else
                       dealmb(fbp);
                   else                              /* I ausser der Reihe */
-                    {                               /* aber Ok fr Sammler*/
+                    {                               /* aber Ok fï¿½r Sammler*/
                       relink(fbp,lnkpoi->collil.tail); /* in Framesammler */
-                      continue;                        /* zum N„chsten    */
+                      continue;                        /* zum Nï¿½chsten    */
                     }
 
                   l2stma(!rxfPF ? stbl01 : stbl00);    /* Statetable      */
-                  continue;           /* Frame abgearbeitet, zum n„chsten */
+                  continue;           /* Frame abgearbeitet, zum nï¿½chsten */
                 }
                 /* FIXME: Das hier ist nonsens und kaschiert lediglich die
                  *  Unzulaenglichkeiten des Host-Mode
@@ -921,7 +921,7 @@ void l2rest()
           /*                                                              */
           /* "Busy werden"      -   weniger als 80 Freibuffer             */
           /*                        oder Frames im L2, die der LX nicht   */
-          /*                        bernommen hat                        */
+          /*                        ï¿½bernommen hat                        */
           /*                                                              */
           /* "Busy aufloesen"   -   wieder mehr als 112 Freibuffer        */
           /*                        und alle Frames raus aus dem L2       */
@@ -1003,7 +1003,7 @@ unsigned short ticks;
                  )
                {
                 lnkpoi->T1 = 0;            /*   ... Timer 1 stoppen       */
-                lnkpoi->flag |= L2FDIRTY;  /*   RTT-Messung ungltig.     */
+                lnkpoi->flag |= L2FDIRTY;  /*   RTT-Messung ungï¿½ltig.     */
                 setT3();                   /*   Timer 3 neu starten       */
                 ++lnkpoi->tries;           /*   Retryzaehler              */
                 if (    !lnkpoi->N2
@@ -1028,7 +1028,7 @@ unsigned short ticks;
                   lnkpoi->T1 -= ticks;    /*   sonst herunterzaehlen      */
           }
 
-          /* Wenn RTT-Messung freigegeben ist, dann RTT um ticks erh”hen  */
+          /* Wenn RTT-Messung freigegeben ist, dann RTT um ticks erhï¿½hen  */
           if (lnkpoi->RTT != 0)
             lnkpoi->RTT += ticks;
 

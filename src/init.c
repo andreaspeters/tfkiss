@@ -535,7 +535,7 @@ int argc;
 char *argv[];
 int *unlock;
 {
-  FILE *init_file_fp;
+  FILE *init_file_fp = NULL;
   int file_end;
   int file_corrupt;
   char line[82];
@@ -549,6 +549,14 @@ int *unlock;
   int explicit_ini=0;
   int i;
   int reset;
+  int explicit_device = 0;
+  int device_override = 0;
+  int speed_override = 0;
+  int kisstype_override = 0;
+  char cli_device[MAXCHAR];
+  int cli_speed = DEF_SPEED;
+  int cli_speedflag = DEF_SPEEDFLAG;
+  int cli_kisstype = KISS_NORMAL;
 
   strcpy(device,DEF_DEVICE);
   speed = DEF_SPEED;
@@ -607,7 +615,6 @@ int *unlock;
   scanned = 1;
   *unlock = 0;
   reset = 0;
-  int explicit_device = 0;
   while ((scanned < argc) && (!wrong_usage)) {
     if (strcmp(argv[scanned],"-i") == 0) {
       scanned++;
@@ -630,7 +637,9 @@ int *unlock;
       scanned++;
       if (scanned < argc) {
         strcpy(device,argv[scanned]);
+        strcpy(cli_device,device);
         explicit_device = 1;
+        device_override = 1;
       }
       else wrong_usage = 1;
     }
@@ -681,6 +690,11 @@ int *unlock;
           wrong_usage = 1;
           break;
         }
+        if (!wrong_usage) {
+          cli_speed = speed;
+          cli_speedflag = speedflag;
+          speed_override = 1;
+        }
       }
       else wrong_usage = 1;
     }
@@ -699,6 +713,10 @@ int *unlock;
         kisstype = atoi(argv[scanned]);
         if (kisstype > KISS_RMNC || kisstype < KISS_NORMAL) {
           wrong_usage = 1;
+        }
+        else {
+          cli_kisstype = kisstype;
+          kisstype_override = 1;
         }
       }
       else wrong_usage = 1;
@@ -771,18 +789,14 @@ int *unlock;
    return(1);
   }
  
-  if (explicit_device) {
-    strcpy(tfkiss_initfile,"");
-    explicit_ini = 0;
-  }
   if (explicit_ini ==1) {
     if (!(init_file_fp = fopen(tfkiss_initfile,"r"))) {
       printf("Error: explicit configuration file \"%s\" not found. \n",
               tfkiss_initfile);
       return(1);
     }
-  }  
-  if (!(init_file_fp = fopen(tfkiss_initfile,"r"))) {
+  }
+  else if (!(init_file_fp = fopen(tfkiss_initfile,"r"))) {
     str_ptr = getenv("HOME");
     if (str_ptr != NULL) {
       strcpy(tmp_str,str_ptr);
@@ -798,13 +812,13 @@ int *unlock;
       init_file_fp = fopen(tmp_str,"r");
     }
   }
-  if(init_file_fp == NULL) { 
+  if(init_file_fp == NULL && !explicit_device) {
     printf("ERROR: Configuration file \"%s\" not found",tmp_str);
     return(1);
   }
   file_end = 0;
   file_corrupt = 0;
-  while (!file_end) {
+  while (init_file_fp != NULL && !file_end) {
     if (fgets(line,82,init_file_fp) == NULL) {
       file_end = 1;
     }
@@ -834,7 +848,8 @@ int *unlock;
       }
     }
   }
-  fclose(init_file_fp);
+  if (init_file_fp != NULL)
+    fclose(init_file_fp);
   if (file_corrupt) {
     if (line == NULL) line[0] = '\0';
     printf("ERROR: %s is in wrong format, wrong line:\n%s\n\n",
@@ -842,6 +857,15 @@ int *unlock;
     return(1);
   }
   else {
+
+    if (device_override)
+      strcpy(device,cli_device);
+    if (speed_override) {
+      speed = cli_speed;
+      speedflag = cli_speedflag;
+    }
+    if (kisstype_override)
+      kisstype = cli_kisstype;
 
      add_dir(tfkiss_log_dir,tfkiss_errfile);
      add_dir(tfkiss_conf_dir,tfkiss_parafile);
