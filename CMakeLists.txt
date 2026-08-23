@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(tfkiss VERSION 2.0.0 LANGUAGES C)
+project(tfkiss VERSION 2.1.0 LANGUAGES C)
 
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
@@ -112,6 +112,7 @@ set(tfkiss_sources
     src/main.c
     src/process.c
     src/routing.c
+    src/pakratt232.c
 )
 
 add_executable(tfkiss ${tfkiss_sources})

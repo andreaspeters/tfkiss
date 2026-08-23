@@ -21,8 +21,12 @@ The original README content follows below.
 
 ## Changes
 
-### master
+### v2.1.0
 
+- ADD: AEA PK-232/Pakratt 232 support via `--pakratt232` flag
+- ADD: New serial communication backend for AEA PK-232 hardware at 9600 baud, 8N1
+- ADD: RTS/CTS and DTR/RTS flow control support
+- ADD: Host-mode raw HDLC protocol handling for AEA PK-232
 - ADD: run tfkiss in foreground (`-f`)
 
 ### v2.0.0

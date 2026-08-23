@@ -64,6 +64,7 @@
 #include "tfext.h"
 #include "kiss.h"
 #include "version.h"
+#include "pakratt232.h"
 
 //&&& hb9xar
 //&&&#undef unsigned
@@ -117,8 +118,10 @@ extern char tfkiss_run_dir[];
 extern int kisstype;
 extern int kiss_active;
 extern int axip_active;
+extern int pakratt232_enable;
 
 static void framedata_to_queue(char *buffer,int len);
+static void frame_to_l1(char *buffer,int len);
 
 #define HOSTQ_BUFLEN 1024
 struct hostqueue {
@@ -480,6 +483,10 @@ static int init_kisslink(char *serstr,int speed, int speedflag,int unlock)
  
 static int exit_kisslink()
 {
+  if (pakratt232_enable) {
+    pakratt232_close(kisslink);
+    return 0;
+  }
   if (use_bluetooth && strlen(bluetooth_mac) > 0) {
     close(kisslink);
   } else {
@@ -697,6 +704,7 @@ void send_kisscmd(int cmd,int value)
   char val2;
 
   if (!kiss_active) return;
+  if (pakratt232_enable) return;
   if (kisstype == KISS_RMNC) return;
   if ((cmd < CMD_TXDELAY) || (cmd > CMD_FULLDUP)) return;
   tx_bufptr = tx_buffer;
@@ -763,6 +771,12 @@ static void kissframe_to_tnc()
     }
 #endif
     if (!kiss_active) continue;
+    if (pakratt232_enable) {
+      (void)pakratt232_send_raw(kisslink,
+                                (unsigned char *)tmp_buffer + 1,
+                                (size_t)(tmp_buflen - 1));
+      continue;
+    }
     switch (kisstype) {
     case KISS_NORMAL:
       *tmp_buffer = 0x00;
@@ -1288,7 +1302,15 @@ int main(int argc,char *argv[])
 #ifdef DEBUG          
     printf("Use KISS\n");
 #endif          
-    if (init_kisslink(device,speed,speedflag,unlock)) {
+    if (pakratt232_enable) {
+      kisslink = pakratt232_open(device, speed);
+      if (kisslink < 0 || pakratt232_init(kisslink)) {
+        if (kisslink >= 0) pakratt232_close(kisslink);
+        free(buffers);
+        if (axip_active) exit_axip();
+        exit(1);
+      }
+    } else if (init_kisslink(device,speed,speedflag,unlock)) {
       free(buffers);
       if (axip_active)
         exit_axip();
@@ -1537,7 +1559,17 @@ int main(int argc,char *argv[])
     }
     if (kiss_active) {
       if (FD_ISSET(kisslink,&rmask)) {
-        if ((len = read(kisslink,buffer,1024))) {
+        if (pakratt232_enable) {
+          unsigned char ctl;
+          size_t frame_len;
+          int rc = pakratt232_read_frame(kisslink, &ctl,
+                                          (unsigned char *)buffer,
+                                          sizeof(buffer), &frame_len);
+          if (rc > 0 && (ctl == 0x3f || (ctl & 0xf0) == 0x30)) {
+            rx_port = 0;
+            frame_to_l1(buffer, (int)frame_len);
+          }
+        } else if ((len = read(kisslink,buffer,1024))) {
           framedata_to_queue(buffer,len);
         }
       }

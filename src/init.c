@@ -57,6 +57,7 @@ int kisstype;
 int kiss_active;
 int axip_active;
 int fulldup_on_dama;
+int pakratt232_enable;
 char bluetooth_mac[MAXCHAR];
 int use_bluetooth;
 char tfkiss_conf_dir[MAXCHAR];
@@ -737,11 +738,15 @@ int *unlock;
     else if (strcmp(argv[scanned],"-f") == 0) {
       use_foreground = 1;
     }
+    else if (strcmp(argv[scanned],"--pakratt232") == 0) {
+      pakratt232_enable = 1;
+    }
     else if (strcmp(argv[scanned],"-h") == 0 || strcmp(argv[scanned],"--help") == 0) {
       printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-f] [-x] [-h|--help]\n");
       printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
       printf("        [-l <log-dir>] [-r <run-dir>]\n");
       printf("        [-e <errfile>] [-p <parafile>] [-a <axipconfig>]\n");
+      printf("        [--pakratt232]       enable AEA PK-232 host mode\n");
       printf("        [-i <init-file>]      specify initialization file\n");
       printf("        [-s <tfkiss-socket>]  enable socket mode with specified socket path\n");
       printf("        [-d <device>]         specify KISS device (e.g. /dev/cua0)\n");
@@ -770,6 +775,7 @@ int *unlock;
    printf("Usage : tfkiss [-i <init-file>] [-s <tfkiss-socket>] [-r] [-t] [-f] [-x] [-h|--help]\n");
    printf("        [-d <device>] [-b <speed>] [-k <kisstype>] [-c <conf-dir>]\n");
    printf("        [-l <log-dir>] [-r <run-dir>] [-e <errfile>] [-p <parafile>] [-a <axipconfig>] [-bt <bt-mac>]\n");
+   printf("        [--pakratt232]       enable AEA PK-232 host mode\n");
    printf("        -i <init-file>  specify initialization file\n");
    printf("        -s <tfkiss-socket>  enable socket mode with specified socket path\n");
    printf("        -d <device>  specify KISS device (e.g. /dev/cua0)\n");
@@ -863,6 +869,10 @@ int *unlock;
     if (speed_override) {
       speed = cli_speed;
       speedflag = cli_speedflag;
+    }
+    else if (pakratt232_enable) {
+      speed = B9600;
+      speedflag = 0;
     }
     if (kisstype_override)
       kisstype = cli_kisstype;
