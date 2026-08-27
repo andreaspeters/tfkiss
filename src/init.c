@@ -378,8 +378,8 @@ usage(void)
   printf("  -bt MAC                use Bluetooth RFCOMM device, e.g. 00:11:22:33:44:55\n\n");
   printf("Console and socket interface:\n");
   printf("  -t                     use the local console (Ctrl-C exits, Ctrl-Z suspends)\n");
-  printf("  -s PATH                listen on a Unix-domain socket; incompatible with -t\n");
-  printf("  --extsocket ADDRESS    listen on an external socket address; incompatible with -t\n");
+  printf("  -s PATH                listen on a Unix-domain socket (can be combined with -t)\n");
+  printf("  --extsocket ADDRESS    listen on an external socket address (can be combined with -t)\n");
   printf("  -f                     do not daemonize when socket mode is selected\n\n");
   printf("AXIP:\n");
   printf("  --axip-active 0|1      disable or enable AXIP (default: 0)\n");
@@ -573,8 +573,6 @@ int *unlock;
     scanned++;
   }
 
-  if (use_socket && use_terminal)
-    wrong_usage = 1;
   if (wrong_usage) {
     usage();
     return(1);

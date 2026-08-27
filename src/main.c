@@ -118,6 +118,7 @@ extern int kiss_active;
 extern int axip_active;
 extern int pakratt232_enable;
 extern int debug;
+extern int use_terminal;
 
 static void framedata_to_queue(char *buffer,int len);
 static void frame_to_l1(char *buffer,int len);
@@ -643,6 +644,9 @@ void hputc(char ch)
   int res;
 
 
+  if (use_terminal) {
+    (void)((write(1,&ch,1) == -1) ? 0 : 1);
+  }
   if (use_socket) {
     if (connected) {
       res = write(consockfd,&ch,1);
@@ -652,7 +656,7 @@ void hputc(char ch)
       }
     }
   }
-  else {
+  else if (!use_terminal) {
     (void)((write(1,&ch,1) == -1) ? 0 : 1);
   }
 }
@@ -1374,13 +1378,13 @@ int main(int argc,char *argv[])
     printf(SIG_D);
     printf(SIG6);
 
-     if (!use_foreground && !debug && fork() != 0)
+     if (!use_foreground && !debug && !use_terminal && fork() != 0)
        exit(0);
 
     if (debug)
       printf("Init ok\n");
 
-     if (!use_foreground && !debug) {
+     if (!use_foreground && !debug && !use_terminal) {
        close(0);
        close(1);
        close(2);
@@ -1390,13 +1394,12 @@ int main(int argc,char *argv[])
      }
 
    }
-  else {
-
+  else if (use_terminal) {
     init_console();
   } ;
 
   signal(SIGHUP, SIG_IGN);
-  if (!use_socket) {
+  if (use_terminal) {
     signal(SIGINT, sigint);
     signal(SIGTSTP, SIG_DFL);
     signal(SIGTTIN, SIG_DFL);
@@ -1421,7 +1424,7 @@ int main(int argc,char *argv[])
   sl2par();
   l2init();
   lxinit();
-  if (!use_socket) {
+  if (use_terminal) {
     /* print signon message */
     hputs(SIG1);
     hputud(LINKNMBR);
@@ -1442,7 +1445,7 @@ int main(int argc,char *argv[])
     
     max_fd = 0;
     FD_ZERO(&rmask);
-    if (!use_socket) {
+    if (use_terminal) {
       FD_SET(0,&rmask);
       max_fd = 1;
     }
@@ -1489,7 +1492,7 @@ int main(int argc,char *argv[])
       continue;
     }
 
-    if (!use_socket) {
+    if (use_terminal) {
       if (FD_ISSET(0,&rmask)) {
         if ((len = read(0,buffer,1024))) {
           host_to_queue(buffer,len);

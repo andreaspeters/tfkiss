@@ -104,8 +104,9 @@ Common invocations:
 ```
 
 `-t` selects the local console. In that mode, `Ctrl-C` performs an orderly
-shutdown and `Ctrl-Z` uses normal shell job control. Console mode and socket
-mode (`-s` or `--extsocket`) cannot be combined.
+shutdown and `Ctrl-Z` uses normal shell job control. It can be combined with
+socket mode (`-s` or `--extsocket`); input and output are then available on
+both the local console and the connected socket client.
 
 AXIP support is always compiled in and is enabled at runtime with
 `--axip-active 1`. An AXIP route configuration supplied by `-a FILE` is then
