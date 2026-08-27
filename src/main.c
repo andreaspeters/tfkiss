@@ -150,7 +150,6 @@ int use_socket;
 extern int use_foreground;
 static int terminated;
 static int kisslink;
-static int lock;
 extern char bluetooth_mac[MAXCHAR];
 extern int use_bluetooth;
 static int sockfd;
@@ -377,7 +376,7 @@ void exit_console()
   tcsetattr(0,TCSADRAIN,&okbd_termios);
 }
 
-static int init_kisslink(char *serstr,int speed, int speedflag,int unlock) 
+static int init_kisslink(char *serstr,int speed, int speedflag)
 {
 #ifdef USE_BLUETOOTH
   struct sockaddr_rc addr = { 0 };
@@ -1255,7 +1254,7 @@ int main(int argc,char *argv[])
 {
   int len;
   char buffer[1024];
-  int unlock;
+
   socklen_t clilen;
   int servlen;
   struct sockaddr_un serv_addr;
@@ -1281,7 +1280,7 @@ int main(int argc,char *argv[])
     exit(1);
   }
     
-  if (read_init_file(argc,argv,&unlock)) {
+  if (read_init_file(argc,argv)) {
     free(buffers);
     exit(1);
   }
@@ -1305,7 +1304,7 @@ int main(int argc,char *argv[])
         if (axip_active) exit_axip();
         exit(1);
       }
-    } else if (init_kisslink(device,speed,speedflag,unlock)) {
+    } else if (init_kisslink(device,speed,speedflag)) {
       free(buffers);
       if (axip_active)
         exit_axip();

@@ -6,11 +6,10 @@
 */
 
 /* default values */
-#define DEF_LOCK_FILE "/usr/spool/uucp/LCK..cua0"
 #define DEF_CONF_DIR "./"
 #define DEF_LOG_DIR "./"
 #define DEF_RUN_DIR "./"
-#define DEF_LOCK_DIR "./"
+
 #define DEF_ERR_FILE "tfkiss.err"
 #define DEF_AXIPCONFIG "tfkiss.cfg"
 #define DEF_SPEED B19200

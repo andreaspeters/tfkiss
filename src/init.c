@@ -370,7 +370,7 @@ usage(void)
   printf("                          57600 and 115200 are available with high-baud support\n");
   printf("  -k TYPE                KISS framing: 0=normal, 1=SMACK, 2=RMNC\n");
   printf("  --kiss-active 0|1      disable or enable the KISS transport (default: 1)\n");
-  printf("  -u                     unlock the serial device before opening it\n");
+
   printf("  -x                     switch a TheFirmware TNC from terminal mode to KISS\n");
   printf("  --pakratt232           use AEA PK-232 host mode; defaults to 9600 baud\n");
   printf("                          unless an explicit -b BAUD is supplied\n\n");
@@ -406,10 +406,9 @@ print_version(void)
   printf("tfkiss %s\n", TFKISS_VERSION);
 }
 
-int read_init_file(argc,argv,unlock)
+int read_init_file(argc,argv)
 int argc;
 char *argv[];
-int *unlock;
 {
   int scanned;
   int wrong_usage;
@@ -436,7 +435,7 @@ int *unlock;
   use_socket = 0;
   use_terminal = 0;
   use_foreground = 0;
-  *unlock = 0;
+
   speed_set = 0;
   wrong_usage = 0;
   axip_config_init();
@@ -483,9 +482,7 @@ int *unlock;
     else if (strcmp(argv[scanned],"--debug") == 0) {
       debug = 1;
     }
-    else if (strcmp(argv[scanned],"-u") == 0) {
-      *unlock = 1;
-    }
+
     else if (strcmp(argv[scanned],"-x") == 0) {
       tnc_to_kiss = 1;
     }
