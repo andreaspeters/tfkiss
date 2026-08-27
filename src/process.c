@@ -13,10 +13,11 @@
 
 #include "config.h"
 
-#ifdef USE_AXIP
 #include "axip.h"
 #include <stdio.h>
 #include <string.h>
+
+extern int debug;
 
 #define IS_LAST(p)      (((*(p+6))&0x01)!=0)
 #define NOT_LAST(p)     (((*(p+6))&0x01)==0)
@@ -231,9 +232,7 @@ unsigned char *buf;
 char *t;
 int l;
 {
-#ifdef DEBUG
 	int i;
-#endif
 	unsigned char *a;
 	char tmpstr[256];
 	char hlpstr[256];
@@ -266,11 +265,10 @@ int l;
 
 	put_error(hlpstr);
 
-#ifdef DEBUG
-	for(i=0;i<l;i++)(void)printf("%02x ",buf[i]);
-	(void)printf("\n");
-#endif
+	if (debug) {
+		for(i=0;i<l;i++)(void)printf("%02x ",buf[i]);
+		(void)printf("\n");
+	}
 
 	(void)fflush(stdout);
 }
-#endif

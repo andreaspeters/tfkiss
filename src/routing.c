@@ -13,7 +13,6 @@
 
 #include <stdio.h>
 #include "config.h"
-#ifdef USE_AXIP
 #include "axip.h"
 #include <sys/types.h>
 #include <memory.h>
@@ -174,5 +173,4 @@ dump_routes()
 	}
 	(void)fflush(stdout);
 }
-#endif
 

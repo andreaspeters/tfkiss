@@ -13,8 +13,6 @@ version 1.0.1
 
 - tfkiss now installs into standard unix directory structure - BJW
 
-- Added autoconf utilities to set compile time options and 
-  parameters - BJW
 
 - General cleanup of source code reducing number of compiler
   warnings. - BJW 
@@ -27,7 +25,6 @@ version 1.0.2
 - Fixed declaration conflict of fd_set in main.c - MH
 
 version 1.0.3
-- removed all references to TNT_XXXX in configure.in - BJW
 
 - removed definition of VOID in src/all.h - BJW
 
@@ -54,8 +51,6 @@ version 1.1.0
 - added command line option "-x" enabling tfkiss to switch a TNC2 from 
   terminal mode into kiss mode - HM 
 
-- added options for XPID, AXIP and FLEXNET support to autoconfig
-  utility - BJW
 
 - added AXIP support for NetBSD - BJW
 
@@ -69,11 +64,6 @@ version 1.2
   this will also terminate tfkiss	- HM 
 
 version 1.2.1
-- real_clean: added to Makefile.in. This will delete all files created
-  by configure; config.{log,cache,status}, Makefile - BJW
-
-- "make install" will check for a previously installed version of
-  tfkiss.ini and suspend installation of new configuration files - BJW
 
 version 1.2.2
 - Fixed HAVE_CRTSCTS option - BJW

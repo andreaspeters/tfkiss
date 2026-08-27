@@ -61,8 +61,9 @@ cmake_install.cmake
 CTestTestfile.cmake
 install_manifest.txt
 
-# executables
+# tfkiss binaries produced by local and platform build scripts
 src/tfkiss
+src/tfkiss_*_amd64
 
 # test directories
 tmp_log

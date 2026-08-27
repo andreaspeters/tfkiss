@@ -61,7 +61,7 @@
 *                           "Anfangswert (aktueller Wert)", wie Ycmd()     *
 *                                                                          *
 *                   DB2OS,  17.09.91                                       *
-*                   UIpar und defUIp fÅr UI+.                              *
+*                   UIpar und defUIp fÔøΩr UI+.                              *
 *                                                                          *
 *                   DL8ZAW, 27.03.92                                       *
 *                   l3init(): entfernt (wird nicht benoetigt fuer TF)      *
@@ -76,7 +76,7 @@
 *                   delich(): BS/DEL - Spezialbehandlung bei '^'Ausgabe.   *
 *                                                                          *
 *                   DG0FT, DB2OS, 21.6.93                                  *
-*                   Ucmd() geÑndert, damit nur noch bei Upar == 2 die      *
+*                   Ucmd() geÔøΩndert, damit nur noch bei Upar == 2 die      *
 *                   //Q-Funktion eingeschaltet ist.                        *
 *                                                                          *
 *                   DB2OS, 27.6.93                                         *
@@ -90,12 +90,12 @@
 *                   Bcmd(): Stillgelegt, gibt keinen Timeout mehr.         *
 *                                                                          *
 *                   DB2OS,  12.08.94                                       *
-*                   A1par und A2par f¸r den SRTT entfernt.                 *
+*                   A1par und A2par fÔøΩr den SRTT entfernt.                 *
 *                   MHEARD entfernt.                                       *
 *                                                                          *
 *                   DB2OS,  27.08.94                                       *
-*                   Bcmd(): Jetzt Anzeige fÅr Anzahl der Hauptschleifen-   *
-*                   durchgÑnge in Rounds per Second.                       *
+*                   Bcmd(): Jetzt Anzeige fÔøΩr Anzahl der Hauptschleifen-   *
+*                   durchgÔøΩnge in Rounds per Second.                       *
 *                   lxinit(): Variablen loops und rps initialisieren.      *                                                       *
 *                   sl2par(): alias und defID (Alias-Call) entfernt.       *
 *                                                                          *
@@ -117,7 +117,7 @@
 
 #include <stdio.h>
 #include "all.h"         /* allgemeine Festlegungen                       */
-#include "version.h"     /* FEF enthÑlt nur Versionsstring                */
+#include "version.h"     /* FEF enthÔøΩlt nur Versionsstring                */
 #include "tf.h"          /* Festlegungen/Datenstrukturen fuer TheFirmware */
 #include "l2.h"          /* Festlegungen/Datenstrukturen fuer den Level 2 */
 #include "tfext.h"       /* globale Variable / nicht int-Funktionen       */
@@ -261,14 +261,14 @@ unsigned short ch;
 {
   if (Epar == YES) {                 /* Echo eingeschaltet?               */
     if (!incnt && ch == defESC)      /* Kein Hostmode?                    */
-      hputs("* ");                   /* Prompt fÅr ESC-Zeichen ausgeben.  */
+      hputs("* ");                   /* Prompt fÔøΩr ESC-Zeichen ausgeben.  */
     else
       if (    ch >= ' '
            || ch == BELL
            || ch == TAB  )           /* darstellbare Zeichen ausgeben     */
         hputc(ch);
       else
-        hputc('.');                  /* Ersatz fÅr Control-Zeichen        */
+        hputc('.');                  /* Ersatz fÔøΩr Control-Zeichen        */
   }
 }
 
@@ -294,7 +294,7 @@ void delich()
     else 
       if (Epar == YES) {              /* Echo eingeschaltet           */
         if (ch != BELL)               /* und kein Bell..              */
-          hpbsb();                    /* Zeichen lîschen           */
+          hpbsb();                    /* Zeichen lÔøΩschen           */
         else
           hputc(ch);
         }
@@ -345,8 +345,8 @@ void Acmd()
 
 /**************************************************************************\
 *                                                                          *
-* Bcmd:  RPS-Anzeige (Rounds per Seconds) frÅher DAMA-Timer.               *
-*        HauptschleifendurchgÑnge pro Sekunde.                             *
+* Bcmd:  RPS-Anzeige (Rounds per Seconds) frÔøΩher DAMA-Timer.               *
+*        HauptschleifendurchgÔøΩnge pro Sekunde.                             *
 *                                                                          *
 \**************************************************************************/
 void Bcmd()
@@ -405,9 +405,8 @@ void Hcmd()
 
 void Jcmd()
   {
-#ifdef DEBUG
-    printf("Set Hostmode\n");    
-#endif    
+    if (debug)
+      printf("Set Hostmode\n");
     if (incnt >= 4)
       if (upcase(*inbufp++) == 'H')
         if (upcase(*inbufp++) == 'O')

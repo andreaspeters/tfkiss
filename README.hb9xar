@@ -4,20 +4,14 @@ requires: a C17 compiler, CMake, and BlueZ development headers on Linux
 configure:
 $ cmake -S . -B build \
     -DTFKISS_ENABLE_HIBAUD=ON \
-    -DTFKISS_ENABLE_XPID=ON \
-    -DTFKISS_ENABLE_AXIP=ON
+    -DTFKISS_ENABLE_XPID=ON
 
 build:
 $ cmake --build build
 $ ctest --test-dir build --output-on-failure
 
-debug build:
-$ cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug \
-    -DTFKISS_ENABLE_HIBAUD=ON \
-    -DTFKISS_ENABLE_XPID=ON \
-    -DTFKISS_ENABLE_AXIP=ON
-$ cmake --build build-debug
-
+debug run:
+$ ./build/src/tfkiss --debug
 
 73 de Thomas, HB9XAR
 
@@ -25,5 +19,6 @@ $ cmake --build build-debug
 History
 -------
 2020-12-13 hb9xar	- imported tfkiss-1.2.4
+
 			- legacy build: pass along environment CFLAGS
 			- applied various sizing fixes for 64bit systems

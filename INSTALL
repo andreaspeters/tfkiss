@@ -19,9 +19,11 @@ configuring, for example:
 
     cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/opt/tfkiss
 
+AXIP support is always compiled and is activated at runtime with
+`--axip-active 1` (and its route configuration passed through `-a`).
+
 Optional features are disabled unless stated otherwise:
 
-    -DTFKISS_ENABLE_AXIP=ON       AXIP support
     -DTFKISS_ENABLE_XPID=ON       changeable PID support
     -DTFKISS_ENABLE_FLEXNET=ON    decoded FLEXNET node frames
     -DTFKISS_ENABLE_HIBAUD=ON     rates above 38400 baud (Linux only)
@@ -31,10 +33,11 @@ Install after a successful build:
 
     sudo cmake --install build
 
-The executable is installed in `sbin`; documentation and configuration are
-installed below `share/tfkiss`. If `tfkiss.ini` already exists in the target
-configuration directory, neither example configuration file is overwritten.
-Review `tfkiss.ini` and `tfkiss.cfg` before starting tfkiss.
+The executable is installed in `sbin`; documentation is installed below
+`share/tfkiss`. Configure tfkiss exclusively with its command-line options;
+run `tfkiss --help` for the complete list. No `tfkiss.ini`, `.par` or `.pid`
+file is required or created. AXIP, when enabled, still reads its dedicated
+route configuration supplied with `-a`.
 
 Packagers can stage an installation without root privileges:
 

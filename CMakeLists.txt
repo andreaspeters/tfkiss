@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(tfkiss VERSION 2.1.0 LANGUAGES C)
+project(tfkiss VERSION 3.0.0 LANGUAGES C)
 
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
@@ -10,7 +10,6 @@ include(GNUInstallDirs)
 option(TFKISS_ENABLE_HIBAUD "Enable Linux baud rates above 38400" OFF)
 option(TFKISS_ENABLE_XPID "Enable PID change support" OFF)
 option(TFKISS_ENABLE_FLEXNET "Enable FLEXNET frame decoding" OFF)
-option(TFKISS_ENABLE_AXIP "Enable AXIP support" OFF)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(_tfkiss_bluetooth_default ON)
@@ -40,7 +39,7 @@ endif()
 set(TFKISS_INSTALL_BINDIR "${_tfkiss_bindir_default}" CACHE PATH
     "Installation directory for the tfkiss executable")
 set(TFKISS_INSTALL_CONFDIR "${_tfkiss_confdir_default}" CACHE PATH
-    "Installation directory for tfkiss configuration files")
+    "Installation directory for AXIP configuration files")
 set(TFKISS_INSTALL_DOCDIR "${_tfkiss_docdir_default}" CACHE PATH
     "Installation directory for tfkiss documentation")
 set(TFKISS_WORK_DIR "${_tfkiss_workdir_default}" CACHE PATH "Default working directory")
@@ -84,9 +83,8 @@ endif()
 set(USE_HIBAUD ${TFKISS_ENABLE_HIBAUD})
 set(USE_XPID ${TFKISS_ENABLE_XPID})
 set(USE_FLEXDEC ${TFKISS_ENABLE_FLEXNET})
-set(USE_AXIP ${TFKISS_ENABLE_AXIP})
 set(USE_BLUETOOTH ${TFKISS_ENABLE_BLUETOOTH})
-set(DEF_INI_DIR "${TFKISS_CONF_FULL_DIR}")
+
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/src")
 configure_file(
@@ -134,17 +132,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
     target_link_libraries(tfkiss PRIVATE nsl socket)
 endif()
 
-set(tfkiss_conf_dir "${TFKISS_CONF_FULL_DIR}")
-set(tfkiss_log_dir "${TFKISS_LOG_DIR}")
-set(tfkiss_run_dir "${TFKISS_RUN_DIR}")
-file(READ "${_tfkiss_platform_config}" cfg)
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/examples")
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/examples/tfkiss.ini.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/examples/tfkiss.ini"
-    @ONLY
-)
-
 install(TARGETS tfkiss RUNTIME DESTINATION "${TFKISS_INSTALL_BINDIR}")
 install(FILES
     doc/alas.eng
@@ -155,8 +142,8 @@ install(FILES
     DESTINATION "${TFKISS_INSTALL_DOCDIR}"
 )
 
-set(TFKISS_GENERATED_INI "${CMAKE_CURRENT_BINARY_DIR}/examples/tfkiss.ini")
 set(TFKISS_AXIP_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/examples/tfkiss.cfg")
+set(TFKISS_CONF_FULL_DIR "${TFKISS_CONF_FULL_DIR}")
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/InstallConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/InstallConfig.cmake"

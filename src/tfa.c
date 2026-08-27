@@ -724,9 +724,8 @@ void cmd()
     if (nxtnos() == YES)
       {
         c = upcase(*inbufp++ & 0xFF);
-#ifdef DEBUG
-        printf("Command: %c\n", (char)c);
-#endif        
+        if (debug)
+          printf("Command: %c\n", (char)c);
         --incnt;
         nxtnos();
         if (c >= '@' && c <= 'Z')

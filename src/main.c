@@ -69,24 +69,22 @@
 //&&& hb9xar
 //&&&#undef unsigned
 
-#ifdef USE_AXIP
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netdb.h>
 #include "axip.h"
-#endif
 
 /* external function declarations */
 extern void append_crc_16();
 extern void append_crc_rmnc();
 extern int check_crc_16();
 extern int check_crc_rmnc();
-extern void exit_proc();
+
 extern void hputs();
 extern void hputud();
-extern int init_proc();
+
 /*extern int isdigit(); */
 extern void l2init();
 extern void l2rest();
@@ -96,7 +94,7 @@ extern void l2tx();
 extern void lx();
 extern void lxinit();
 extern int read_init_file();
-extern void save_para();
+
 extern void sl2par();
 
 /* local function declarations */
@@ -119,6 +117,7 @@ extern int kisstype;
 extern int kiss_active;
 extern int axip_active;
 extern int pakratt232_enable;
+extern int debug;
 
 static void framedata_to_queue(char *buffer,int len);
 static void frame_to_l1(char *buffer,int len);
@@ -134,6 +133,14 @@ struct hostqueue {
 static struct hostqueue *hostq_root;
 static struct hostqueue *hostq_last;
 static int hostq_len;
+
+/* Display version and exit */
+static void
+version(void)
+{
+  printf("tfkiss %s\n", TFKISS_VERSION);
+  exit(0);
+}
 
 extern char device[MAXCHAR];
 extern int speed;
@@ -173,7 +180,6 @@ static union {
   struct sockaddr_un su;
 } addr;
 
-#ifdef USE_AXIP
 static char helpstr[256];
 int udpsock;
 int sock;
@@ -181,7 +187,6 @@ struct sockaddr_in udpbind;
 struct sockaddr_in to;
 struct sockaddr_in from;
 int fromlen;
-#endif
 
 /* defines for rx_state */
 #define ST_BEGIN 0
@@ -343,7 +348,8 @@ void init_console()
   nkbd_termios.c_iflag = 0;
   nkbd_termios.c_iflag |= (IGNBRK|ICRNL);
   nkbd_termios.c_oflag = 0;
-  nkbd_termios.c_lflag = 0;
+  /* Keep terminal-generated job-control signals available in console mode. */
+  nkbd_termios.c_lflag = ISIG;
   nkbd_termios.c_cflag |= (CS8|CREAD|CLOCAL);
 #ifdef HAVE_CRTSCTS
   nkbd_termios.c_cflag &= ~(CSTOPB|PARENB|PARODD|CRTSCTS|HUPCL); 
@@ -426,9 +432,9 @@ static int init_kisslink(char *serstr,int speed, int speedflag,int unlock)
     return(1);
   }
 #endif
-#ifdef DEBUG
-  printf ( "successfully opened kisslink port \n");
-#endif 
+  if (debug)
+    printf ( "successfully opened kisslink port \n");
+  if (!is_bluetooth) {
   tcgetattr(kisslink,&org_termios);
 #ifdef USE_HIBAUD
   if (speed == B38400 && !is_bluetooth) {
@@ -471,6 +477,7 @@ static int init_kisslink(char *serstr,int speed, int speedflag,int unlock)
   }
 #endif
   tcsetattr(kisslink,TCSADRAIN,&wrk_termios);
+  }
   rx_state = ST_BEGIN;
   rx_port = 0;
   tx_kick = 0;
@@ -498,7 +505,6 @@ static int exit_kisslink()
 
 static int init_axip()
 {
-#ifdef USE_AXIP
 
 /*
  * The bzero is not strictly required - it simply zeros out the
@@ -551,15 +557,12 @@ static int init_axip()
     }
   }
   return(0);
-#endif
 }
 
 static void exit_axip()
 {
-#ifdef USE_AXIP
   if (ip_mode) close(sock);
   if (udp_mode) close(udpsock);
-#endif
 }
 
 static void alloc_hostqbuf()
@@ -638,9 +641,7 @@ BOOLEAN ishput()
 void hputc(char ch)
 {
   int res;
-//#ifdef DEBUG  
-//  printf("Debug hputc: = 0x%02X (%d)\n", ch, ch);  
-//#endif
+
 
   if (use_socket) {
     if (connected) {
@@ -678,13 +679,13 @@ static void host_to_queue(char *buffer,int len)
   char *bufptr;
   int i;
   
-#ifdef DEBUG  
-  printf("Debug host_to_queue: ");
-  for (size_t i = 0; i < len; i++) {
+  if (debug) {
+    printf("Debug host_to_queue: ");
+    for (size_t i = 0; i < len; i++) {
       printf("%d ", buffer[i]);
+    }
+    printf("\n");
   }
-  printf("\n");
-#endif
 
   bufptr = buffer;
   i = 0;
@@ -765,11 +766,9 @@ static void kissframe_to_tnc()
         tmp_buflen++;
       }
     }
-#ifdef USE_AXIP
     if (axip_active) {
       if (from_kiss(tmp_buffer + 1,tmp_buflen - 1)) continue;
     }
-#endif
     if (!kiss_active) continue;
     if (pakratt232_enable) {
       (void)pakratt232_send_raw(kisslink,
@@ -824,9 +823,8 @@ static void frame_to_l1(char *buffer,int len)
 {
   int i;
 
-#ifdef DEBUG
-  printf("frame_to_l1: rx_port=%d len=%d, buffer=\"%.*s\"\n", rx_port, len, len, buffer);
-#endif
+  if (debug)
+    printf("frame_to_l1: rx_port=%d len=%d, buffer=\"%.*s\"\n", rx_port, len, len, buffer);
 
   l1put((short)(0x8001 + rx_port * 0x100));
   for (i=0;i<len;i++) {
@@ -859,7 +857,6 @@ static void frame_valid(char *buffer,int len,int type)
   }
 }
 
-#ifdef USE_AXIP
 
 /* Convert ascii callsign to internal format */
 int
@@ -1025,7 +1022,6 @@ unsigned char *targetip;
   }
 }
 
-#endif
 
 /* put data received over kisslink in rxbuffer */
 static void framedata_to_queue(char *buffer,int len)
@@ -1035,18 +1031,18 @@ static void framedata_to_queue(char *buffer,int len)
   char ch;
   char tmpstr[MAXCHAR];
 
-#ifdef DEBUG
-  if (len >= MAXCHAR) len = MAXCHAR - 1;
-  for (i = 0; i < len; i++) {
-      char c = buffer[i];
-      if (c >= 32 && c <= 126)    // druckbare ASCII-Zeichen
-          tmpstr[i] = c;
-      else
-          tmpstr[i] = '.';        // Platzhalter f�r Nicht-ASCII
+  if (debug) {
+    if (len >= MAXCHAR) len = MAXCHAR - 1;
+    for (i = 0; i < len; i++) {
+        char c = buffer[i];
+        if (c >= 32 && c <= 126)
+            tmpstr[i] = c;
+        else
+            tmpstr[i] = '.';
+    }
+    tmpstr[len] = '\0';
+    printf("framedata_to_queue: len=%d, buffer=\"%s\"\n", len, tmpstr);
   }
-  tmpstr[len] = '\0';
-  printf("framedata_to_queue: len=%d, buffer=\"%s\"\n", len, tmpstr);
-#endif
 
   i = 0;
   bufptr = buffer;
@@ -1104,8 +1100,7 @@ static void framedata_to_queue(char *buffer,int len)
       switch (ch) {
       case FEND:
         frame_valid(rx_buffer,rx_buflen,kisstype);
-#ifdef DEBUG
-        {
+        if (debug) {
           int j;
           printf("framedata_to_queue: COMPLETE frame received, len=%d\n", rx_buflen);
           printf("  Data (ASCII): \"");
@@ -1117,7 +1112,6 @@ static void framedata_to_queue(char *buffer,int len)
               putchar('.');
           }
         }
-#endif
         rx_state = ST_PORT;
         break;
       case FESC:
@@ -1193,9 +1187,8 @@ static void switchback()
   sprintf ( buf, "%c%c%c%c\n" , (char)255 , (char)255 , (char)0 , (char)0 ) ; 
   if ( tnc_to_kiss ) 
       {
-#ifdef DEBUG
-	printf ( "trying to switch tnc back to hostmode \n" ) ; 
-#endif
+        if (debug)
+	  printf ( "trying to switch tnc back to hostmode \n" ) ;
         (void)((write ( kisslink, buf , strlen ( buf ) ) == -1) ? 0 : 1);
 	/* printf ( buf ) ; */
       } ;
@@ -1209,11 +1202,15 @@ static void sigterm()
   signal(SIGTERM, SIG_IGN);
 }
 
+static void sigint()
+{
+  terminated = 1;
+}
+
 static int exit_all()
 {
   free(buffers);
   
-  save_para();
 
   if (use_socket) {
     if (connected) {
@@ -1226,7 +1223,6 @@ static int exit_all()
     exit_console();
   }
 
-  exit_proc();
 
   if (axip_active) {
     exit_axip();
@@ -1243,9 +1239,8 @@ void dotokiss(void)
   {
   if ( tnc_to_kiss ) 
       {
-#ifdef DEBUG
-	printf ( "trying to switch tnc to kiss \n" ) ; 
-#endif
+        if (debug)
+	  printf ( "trying to switch tnc to kiss \n" ) ;
         (void)((write ( kisslink, TTKISS , strlen ( TTKISS ) ) == -1) ? 0 : 1);
 	/* printf ( TTKISS ) ; */
       } ; 
@@ -1267,14 +1262,12 @@ int main(int argc,char *argv[])
   int max_fd;
   int count;
 
-#ifdef USE_AXIP
   int n, hdr_len;
   unsigned char buf[MAX_FRAME];
 #ifdef __NetBSD__
   struct ip *ipptr;
 #else
   struct iphdr *ipptr; 
-#endif
 #endif
   umask(0); /* don't filter file-permissions */
 
@@ -1290,18 +1283,16 @@ int main(int argc,char *argv[])
   }
 
   if (axip_active) {
-#ifdef DEBUG          
-    printf("Use AXIP\n");
-#endif          
+    if (debug)
+      printf("Use AXIP\n");
     if (init_axip()) {
       free(buffers);
       exit(1);
     }
   }
   if (kiss_active) {
-#ifdef DEBUG          
-    printf("Use KISS\n");
-#endif          
+    if (debug)
+      printf("Use KISS\n");
     if (pakratt232_enable) {
       kisslink = pakratt232_open(device, speed);
       if (kisslink < 0 || pakratt232_init(kisslink)) {
@@ -1319,9 +1310,8 @@ int main(int argc,char *argv[])
   }
   
   if (use_socket) {
-#ifdef DEBUG          
-    printf("Use Socket\n");
-#endif          
+    if (debug)
+      printf("Use Socket\n");
     if (use_socket == 2) {
       saddr = build_sockaddr(tfkiss_socket,&servlen);
       if (!saddr) {
@@ -1384,26 +1374,13 @@ int main(int argc,char *argv[])
     printf(SIG_D);
     printf(SIG6);
 
- #ifndef DEBUG    
-     if (!use_foreground && fork() != 0)
+     if (!use_foreground && !debug && fork() != 0)
        exit(0);
- #endif
 
-    if (init_proc()) {
-      free(buffers);
-      close(sockfd);
-      if (axip_active)
-        exit_axip();
-      if (kiss_active)
-        exit_kisslink();
-      exit(1);
-    }
-#ifdef DEBUG          
-    printf("Init ok\n");
-#endif          
+    if (debug)
+      printf("Init ok\n");
 
- #ifndef DEBUG    
-     if (!use_foreground) {
+     if (!use_foreground && !debug) {
        close(0);
        close(1);
        close(2);
@@ -1411,26 +1388,25 @@ int main(int argc,char *argv[])
        setsid();
        signal(SIGPIPE, SIG_IGN);
      }
- #endif    
+
    }
   else {
-
-    if (init_proc()) {
-      free(buffers);
-      if (axip_active)
-        exit_axip();
-      if (kiss_active)
-        exit_kisslink();
-      exit(1);
-    }
 
     init_console();
   } ;
 
   signal(SIGHUP, SIG_IGN);
-  signal(SIGTSTP, SIG_IGN);
-  signal(SIGTTIN, SIG_IGN);
-  signal(SIGTTOU, SIG_IGN);
+  if (!use_socket) {
+    signal(SIGINT, sigint);
+    signal(SIGTSTP, SIG_DFL);
+    signal(SIGTTIN, SIG_DFL);
+    signal(SIGTTOU, SIG_DFL);
+  }
+  else {
+    signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+  }
   signal(SIGTERM, sigterm);
   signal(SIGUSR1, switchback );  /* oe1smc */ 
 
@@ -1471,7 +1447,6 @@ int main(int argc,char *argv[])
       max_fd = 1;
     }
     if (axip_active) {
-#ifdef USE_AXIP
       if (ip_mode) {
         FD_SET(sock,&rmask);
         if (sock > max_fd - 1)
@@ -1482,7 +1457,6 @@ int main(int argc,char *argv[])
         if (udpsock > max_fd - 1)
           max_fd = udpsock + 1;
       }
-#endif
     }
     if (kiss_active) {
       FD_SET(kisslink,&rmask);
@@ -1523,7 +1497,6 @@ int main(int argc,char *argv[])
       }
     }
     if (axip_active) {
-#ifdef USE_AXIP
       if (udp_mode) {
         if (FD_ISSET(udpsock,&rmask)) {
           fromlen = sizeof from;
@@ -1555,7 +1528,6 @@ int main(int argc,char *argv[])
           if (n > hdr_len) from_ip(buf+hdr_len,n-hdr_len);
         }
       } /* if ip_mode */
-#endif
     }
     if (kiss_active) {
       if (FD_ISSET(kisslink,&rmask)) {
@@ -1590,9 +1562,8 @@ int main(int argc,char *argv[])
       else {
         if (FD_ISSET(consockfd,&rmask)) {
           len = read(consockfd,buffer,1024);
-#ifdef DEBUG
-          printf("ReadFromSocket Debug: buffer[0] = 0x%02X (%d)\n", (unsigned char)buffer[0], (unsigned char)buffer[0]);
-#endif          
+          if (debug)
+            printf("ReadFromSocket Debug: buffer[0] = 0x%02X (%d)\n", (unsigned char)buffer[0], (unsigned char)buffer[0]);
           if ((len == -1) || (len == 0)) {
             close(consockfd);
             connected = 0;

@@ -55,7 +55,7 @@
 #define L2BREMSE   60         /* Freie Buffer bei deren Unterschreitung   */
                               /* der TNC BUSY wird und alles wegwirft..   */
 #define L2GAS      80         /* Gasgeben, wieder genug Buffer frei..     */
-#define HBREMSE    40         /* Wie oben, aber fÅr Terminal-Seite        */
+#define HBREMSE    40         /* Wie oben, aber fÔøΩr Terminal-Seite        */
 #define MBREMSE   128         /* keine Frames mehr in den Monitorbuffer   */
 #define CBREMSE    64         /* Connect nur annehmen wenn genug frei..   */
 #define TXBREMSE   32         /* jetzt auch noch TXFRAMES wegwerfen..     */
@@ -89,6 +89,8 @@
 /**************************************************************************/
 
 typedef unsigned short  BOOLEAN;   /* 1 = TRUE, 0 = FALSE                 */
+
+extern int debug;
 
 
 
