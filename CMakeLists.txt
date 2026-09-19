@@ -7,9 +7,20 @@ include(CheckIncludeFiles)
 include(CTest)
 include(GNUInstallDirs)
 
-option(TFKISS_ENABLE_HIBAUD "Enable Linux baud rates above 38400" OFF)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(_tfkiss_hibaud_default ON)
+else()
+    set(_tfkiss_hibaud_default OFF)
+endif()
+option(TFKISS_ENABLE_HIBAUD "Enable Linux baud rates above 38400" ${_tfkiss_hibaud_default})
 option(TFKISS_ENABLE_XPID "Enable PID change support" OFF)
 option(TFKISS_ENABLE_FLEXNET "Enable FLEXNET frame decoding" OFF)
+option(TFKISS_ENABLE_TRAY "Enable the optional X11 system-tray icon" OFF)
+
+if(TFKISS_ENABLE_TRAY)
+    find_package(X11 REQUIRED)
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(_tfkiss_bluetooth_default ON)
@@ -111,6 +122,7 @@ set(tfkiss_sources
     src/process.c
     src/routing.c
     src/pakratt232.c
+    src/tray.c
 )
 
 add_executable(tfkiss ${tfkiss_sources})
@@ -127,6 +139,17 @@ target_include_directories(tfkiss PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
+
+if(TFKISS_ENABLE_TRAY)
+    target_compile_definitions(tfkiss PRIVATE TFKISS_HAVE_X11=1)
+    target_include_directories(tfkiss PRIVATE ${X11_INCLUDE_DIR})
+    target_link_libraries(tfkiss PRIVATE
+        ${X11_LIBRARIES}
+        ${X11_xcb_LIB}
+        ${X11_Xau_LIB}
+        ${X11_Xdmcp_LIB}
+    )
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
     target_link_libraries(tfkiss PRIVATE nsl socket)

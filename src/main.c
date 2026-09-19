@@ -65,6 +65,7 @@
 #include "kiss.h"
 #include "version.h"
 #include "pakratt232.h"
+#include "tray.h"
 
 //&&& hb9xar
 //&&&#undef unsigned
@@ -203,6 +204,7 @@ int fromlen;
 #define TTKISS "\033@k\r\n"
 
 static int exit_all();
+static void tray_quit(void);
 
 /* dummy data */
 unsigned short p1end;
@@ -1212,6 +1214,7 @@ static void sigint()
 
 static int exit_all()
 {
+  tray_shutdown();
   free(buffers);
   
 
@@ -1236,6 +1239,11 @@ static int exit_all()
     }
   }
   return(0);
+}
+
+static void tray_quit(void)
+{
+  terminated = 1;
 }
 
 void dotokiss(void)
@@ -1423,6 +1431,7 @@ int main(int argc,char *argv[])
   sl2par();
   l2init();
   lxinit();
+  tray_init(tray_quit);
   if (use_terminal) {
     /* print signon message */
     hputs(SIG1);
@@ -1444,6 +1453,11 @@ int main(int argc,char *argv[])
     
     max_fd = 0;
     FD_ZERO(&rmask);
+    if (tray_fd() >= 0) {
+      FD_SET(tray_fd(), &rmask);
+      if (tray_fd() >= max_fd)
+        max_fd = tray_fd() + 1;
+    }
     if (use_terminal) {
       FD_SET(0,&rmask);
       max_fd = 1;
@@ -1490,6 +1504,9 @@ int main(int argc,char *argv[])
     if (count == -1) {
       continue;
     }
+
+    if (tray_fd() >= 0 && FD_ISSET(tray_fd(), &rmask))
+      tray_process_events();
 
     if (use_terminal) {
       if (FD_ISSET(0,&rmask)) {

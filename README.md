@@ -9,6 +9,7 @@ systems and is built **exclusively with CMake**.
 
 - CMake 3.16 or newer
 - A C compiler with C17 support
+- X11 development libraries (optional; enables the system-tray icon)
 - BlueZ development headers on Linux when Bluetooth support is enabled
   (enabled by default on Linux)
 
@@ -36,15 +37,19 @@ There is no GNU Configure, Autoconf, Automake, or Makefile build path.
 | Option | Default | Description |
 | --- | --- | --- |
 | `TFKISS_ENABLE_BLUETOOTH` | `ON` on Linux | Bluetooth RFCOMM support |
-| `TFKISS_ENABLE_HIBAUD` | `OFF` | Linux baud rates above 38400 |
+| `TFKISS_ENABLE_HIBAUD` | `ON` on Linux | Linux baud rates above 38400 |
 | `TFKISS_ENABLE_XPID` | `OFF` | Changeable PID support |
 | `TFKISS_ENABLE_FLEXNET` | `OFF` | FLEXNET frame decoding |
+
+With `-DTFKISS_ENABLE_TRAY=ON` and X11 development libraries installed, tfkiss
+adds a small system-tray icon when `DISPLAY` is available. Clicking the icon
+requests an orderly shutdown. Headless and console operation does not depend
+on X11. The default is `OFF` so minimal/server builds remain dependency-free.
 
 Example with optional serial features:
 
 ```sh
 cmake -S . -B build \
-  -DTFKISS_ENABLE_HIBAUD=ON \
   -DTFKISS_ENABLE_XPID=ON
 ```
 
