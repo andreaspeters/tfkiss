@@ -37,7 +37,6 @@ There is no GNU Configure, Autoconf, Automake, or Makefile build path.
 | Option | Default | Description |
 | --- | --- | --- |
 | `TFKISS_ENABLE_BLUETOOTH` | `ON` on Linux | Bluetooth RFCOMM support |
-| `TFKISS_ENABLE_HIBAUD` | `ON` on Linux | Linux baud rates above 38400 |
 | `TFKISS_ENABLE_XPID` | `OFF` | Changeable PID support |
 | `TFKISS_ENABLE_FLEXNET` | `OFF` | FLEXNET frame decoding |
 

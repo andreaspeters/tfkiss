@@ -50,13 +50,6 @@
 #include <bluetooth/rfcomm.h>
 #endif
 
-#ifdef USE_HIBAUD
-#include <sys/ioctl.h>
-#include <linux/fs.h>
-#include <linux/tty.h>
-#include <linux/serial.h>
-#endif
-
 #define TFKISS_MAIN
 #include "all.h"
 #include "tf.h"
@@ -384,10 +377,9 @@ static int init_kisslink(char *serstr,int speed, int speedflag)
   struct sockaddr_rc addr = { 0 };
   int btsock;
 #endif
-#ifdef USE_HIBAUD
-  struct serial_struct ser_io;
-#endif
   int is_bluetooth = 0;
+
+  (void)speedflag;
     
 #ifdef USE_BLUETOOTH
   if (use_bluetooth && strlen(bluetooth_mac) > 0) {
@@ -438,15 +430,7 @@ static int init_kisslink(char *serstr,int speed, int speedflag)
     printf ( "successfully opened kisslink port \n");
   if (!is_bluetooth) {
   tcgetattr(kisslink,&org_termios);
-#ifdef USE_HIBAUD
-  if (speed == B38400 && !is_bluetooth) {
-    if (ioctl(kisslink,TIOCGSERIAL, &ser_io) < 0) {
-      printf("Error: can't get kisslink info\n");
-      close(kisslink);
-      return(1);
-    }
-  }
-#endif
+
   wrk_termios = org_termios;
   wrk_termios.c_cc[VTIME] = 0;
   wrk_termios.c_cc[VMIN] = 0;
@@ -466,18 +450,7 @@ static int init_kisslink(char *serstr,int speed, int speedflag)
 #endif
   cfsetispeed(&wrk_termios,speed);
   cfsetospeed(&wrk_termios,speed);
-#ifdef USE_HIBAUD
-  if (speed == B38400 && !is_bluetooth) {
-    ser_io.flags &= ~ASYNC_SPD_MASK;
-    ser_io.flags |= speedflag;
-    if (ioctl(kisslink,TIOCSSERIAL, &ser_io) < 0) {
-      printf("Error: can't set kisslink info\n");
-      tcsetattr(kisslink,TCSADRAIN,&org_termios);
-      close(kisslink);
-      return(1);
-    }
-  }
-#endif
+
   tcsetattr(kisslink,TCSADRAIN,&wrk_termios);
   }
   rx_state = ST_BEGIN;

@@ -20,12 +20,6 @@
 #include <unistd.h>
 #include "config.h"
 
-#ifdef USE_HIBAUD
-#include <linux/fs.h>
-#include <linux/tty.h>
-#include <linux/serial.h>
-#endif
-
 #include "init.h"
 #include "kiss.h"
 #include "version.h"
@@ -316,16 +310,12 @@ int *baudflag;
   case 38400:
     *baud = B38400;
     break;
-#ifdef USE_HIBAUD
   case 57600:
-    *baud = B38400;
-    *baudflag = ASYNC_SPD_HI;
+    *baud = B57600;
     break;
   case 115200:
-    *baud = B38400;
-    *baudflag = ASYNC_SPD_VHI;
+    *baud = B115200;
     break;
-#endif
   default:
     return(1);
   }

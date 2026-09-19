@@ -4,7 +4,6 @@
 #cmakedefine HAVE_ERRNO_H 1
 #cmakedefine HAVE_CRTSCTS 1
 
-#cmakedefine USE_HIBAUD 1
 #cmakedefine USE_XPID 1
 #cmakedefine USE_FLEXDEC 1
 #cmakedefine USE_BLUETOOTH 1

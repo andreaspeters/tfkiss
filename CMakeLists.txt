@@ -8,12 +8,6 @@ include(CTest)
 include(GNUInstallDirs)
 
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(_tfkiss_hibaud_default ON)
-else()
-    set(_tfkiss_hibaud_default OFF)
-endif()
-option(TFKISS_ENABLE_HIBAUD "Enable Linux baud rates above 38400" ${_tfkiss_hibaud_default})
 option(TFKISS_ENABLE_XPID "Enable PID change support" OFF)
 option(TFKISS_ENABLE_FLEXNET "Enable FLEXNET frame decoding" OFF)
 option(TFKISS_ENABLE_TRAY "Enable the optional X11 system-tray icon" OFF)
@@ -73,10 +67,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
     set(_tfkiss_platform_config "${CMAKE_CURRENT_SOURCE_DIR}/examples/solaris.cfg")
 endif()
 
-if(TFKISS_ENABLE_HIBAUD AND NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(FATAL_ERROR "TFKISS_ENABLE_HIBAUD is supported only on Linux")
-endif()
-
 check_include_file(errno.h HAVE_ERRNO_H)
 if(TFKISS_ENABLE_BLUETOOTH)
     check_include_files(
@@ -91,7 +81,6 @@ if(TFKISS_ENABLE_BLUETOOTH)
     endif()
 endif()
 
-set(USE_HIBAUD ${TFKISS_ENABLE_HIBAUD})
 set(USE_XPID ${TFKISS_ENABLE_XPID})
 set(USE_FLEXDEC ${TFKISS_ENABLE_FLEXNET})
 set(USE_BLUETOOTH ${TFKISS_ENABLE_BLUETOOTH})

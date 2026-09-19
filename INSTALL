@@ -26,7 +26,6 @@ Optional features are disabled unless stated otherwise:
 
     -DTFKISS_ENABLE_XPID=ON       changeable PID support
     -DTFKISS_ENABLE_FLEXNET=ON    decoded FLEXNET node frames
-    -DTFKISS_ENABLE_HIBAUD=ON     rates above 38400 baud (Linux only)
     -DTFKISS_ENABLE_BLUETOOTH=OFF disable Bluetooth (enabled by default on Linux)
 
 Install after a successful build:

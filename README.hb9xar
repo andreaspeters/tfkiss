@@ -3,7 +3,6 @@ requires: a C17 compiler, CMake, and BlueZ development headers on Linux
 
 configure:
 $ cmake -S . -B build \
-    -DTFKISS_ENABLE_HIBAUD=ON \
     -DTFKISS_ENABLE_XPID=ON
 
 build:
